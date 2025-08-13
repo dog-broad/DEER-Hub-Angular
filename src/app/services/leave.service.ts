@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
 import { Leave, LeaveStatus, LeaveType } from '../models/leave.model';
 
 @Injectable({
@@ -67,23 +66,19 @@ export class LeaveService {
 
     private nextId = 5;
 
-    constructor() { }
-
-    getLeavesByUser(userId: number): Observable<Leave[]> {
-        const userLeaves = this.leaves.filter(leave => leave.userId === userId);
-        return of(userLeaves);
+    getLeavesByUser(userId: number): Leave[] {
+        return this.leaves.filter(leave => leave.userId === userId);
     }
 
-    getAllLeaves(): Observable<Leave[]> {
-        return of([...this.leaves]);
+    getAllLeaves(): Leave[] {
+        return [...this.leaves];
     }
 
-    getLeaveById(id: number): Observable<Leave | undefined> {
-        const leave = this.leaves.find(l => l.id === id);
-        return of(leave);
+    getLeaveById(id: number): Leave | undefined {
+        return this.leaves.find(l => l.id === id);
     }
 
-    applyLeave(leave: Omit<Leave, 'id' | 'status' | 'appliedDate'>): Observable<Leave> {
+    applyLeave(leave: Omit<Leave, 'id' | 'status' | 'appliedDate'>): Leave {
         const newLeave: Leave = {
             ...leave,
             id: this.nextId++,
@@ -92,10 +87,10 @@ export class LeaveService {
         };
 
         this.leaves.push(newLeave);
-        return of(newLeave);
+        return newLeave;
     }
 
-    updateLeaveStatus(leaveId: number, status: LeaveStatus, approvedBy: number, comments?: string): Observable<Leave | null> {
+    updateLeaveStatus(leaveId: number, status: LeaveStatus, approvedBy: number, comments?: string): Leave | null {
         const leaveIndex = this.leaves.findIndex(l => l.id === leaveId);
 
         if (leaveIndex !== -1) {
@@ -106,29 +101,29 @@ export class LeaveService {
                 approvedDate: new Date(),
                 comments
             };
-            return of(this.leaves[leaveIndex]);
+            return this.leaves[leaveIndex];
         }
 
-        return of(null);
+        return null;
     }
 
-    deleteLeave(leaveId: number): Observable<boolean> {
+    deleteLeave(leaveId: number): boolean {
         const leaveIndex = this.leaves.findIndex(l => l.id === leaveId);
 
         if (leaveIndex !== -1) {
             this.leaves.splice(leaveIndex, 1);
-            return of(true);
+            return true;
         }
 
-        return of(false);
+        return false;
     }
 
-    getLeavesByStatus(status: LeaveStatus): Observable<Leave[]> {
-        const filteredLeaves = this.leaves.filter(leave => leave.status === status);
-        return of(filteredLeaves);
+    getLeavesByStatus(status: LeaveStatus): Leave[] {
+        return this.leaves.filter(leave => leave.status === status);
     }
 
-    getPendingLeaves(): Observable<Leave[]> {
+    getPendingLeaves(): Leave[] {
         return this.getLeavesByStatus(LeaveStatus.PENDING);
     }
 }
+

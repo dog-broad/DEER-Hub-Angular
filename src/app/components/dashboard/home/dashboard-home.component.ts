@@ -33,36 +33,32 @@ export class DashboardHomeComponent implements OnInit {
     this.currentUser = this.authService.getCurrentUser();
   }
 
-  ngOnInit(): void {
-    this.loadDashboardData();
+  async ngOnInit(): Promise<void> {
+    await this.loadDashboardData();
   }
 
-  private loadDashboardData(): void {
+  private async loadDashboardData(): Promise<void> {
     if (this.currentUser) {
-      // Load user's recent leaves
-      this.leaveService.getLeavesByUser(this.currentUser.id).subscribe(leaves => {
+      try {
+        // Load user's recent leaves
+        const leaves = await this.leaveService.getLeavesByUser(this.currentUser.id);
         this.recentLeaves = leaves.slice(0, 5); // Get last 5 leaves
         this.pendingLeavesCount = leaves.filter(leave => leave.status === LeaveStatus.PENDING).length;
-      });
 
-      // Load recent documents
-      if (this.authService.isManager()) {
-        this.documentService.getAllDocuments().subscribe(documents => {
-          this.recentDocuments = documents.slice(0, 5);
-          this.totalDocumentsCount = documents.length;
-        });
-      } else {
-        this.documentService.getPublicDocuments().subscribe(documents => {
-          this.recentDocuments = documents.slice(0, 5);
-          this.totalDocumentsCount = documents.length;
-        });
-      }
+        // Load recent documents
+        const documents = this.isManager 
+          ? await this.documentService.getAllDocuments() 
+          : await this.documentService.getPublicDocuments();
+        this.recentDocuments = documents.slice(0, 5);
+        this.totalDocumentsCount = documents.length;
 
-      // Load recent announcements
-      this.announcementService.getActiveAnnouncements().subscribe(announcements => {
+        // Load recent announcements
+        const announcements = await this.announcementService.getActiveAnnouncements();
         this.recentAnnouncements = announcements.slice(0, 5);
         this.activeAnnouncementsCount = announcements.length;
-      });
+      } catch (error) {
+        console.error('Error loading dashboard data', error);
+      }
     }
   }
 
@@ -108,3 +104,4 @@ export class DashboardHomeComponent implements OnInit {
     });
   }
 }
+

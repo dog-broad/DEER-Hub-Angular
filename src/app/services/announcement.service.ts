@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
 import { Announcement } from '../models/announcement.model';
 
 @Injectable({
@@ -91,36 +90,32 @@ export class AnnouncementService {
 
   constructor() { }
 
-  getAllAnnouncements(): Observable<Announcement[]> {
-    return of([...this.announcements]);
+  getAllAnnouncements(): Announcement[] {
+    return this.announcements;
   }
 
-  getActiveAnnouncements(): Observable<Announcement[]> {
-    const activeAnnouncements = this.announcements.filter(announcement => announcement.isActive);
-    return of(activeAnnouncements);
+  getActiveAnnouncements(): Announcement[] {
+    return this.announcements.filter(announcement => announcement.isActive);
   }
 
-  getAnnouncementsByAudience(audience: 'all' | 'employees' | 'managers'): Observable<Announcement[]> {
-    const filteredAnnouncements = this.announcements.filter(announcement => 
+  getAnnouncementsByAudience(audience: 'all' | 'employees' | 'managers'): Announcement[] {
+    return this.announcements.filter(announcement => 
       announcement.isActive && 
       (announcement.targetAudience === 'all' || announcement.targetAudience === audience)
     );
-    return of(filteredAnnouncements);
   }
 
-  getEvents(): Observable<Announcement[]> {
-    const events = this.announcements.filter(announcement => 
+  getEvents(): Announcement[] {
+    return this.announcements.filter(announcement => 
       announcement.isActive && announcement.isEvent
     );
-    return of(events);
   }
 
-  getAnnouncementById(id: number): Observable<Announcement | undefined> {
-    const announcement = this.announcements.find(ann => ann.id === id);
-    return of(announcement);
+  getAnnouncementById(id: number): Announcement | undefined {
+    return this.announcements.find(ann => ann.id === id);
   }
 
-  createAnnouncement(announcement: Omit<Announcement, 'id' | 'createdDate'>): Observable<Announcement> {
+  createAnnouncement(announcement: Announcement): Announcement {
     const newAnnouncement: Announcement = {
       ...announcement,
       id: this.nextId++,
@@ -128,10 +123,10 @@ export class AnnouncementService {
     };
     
     this.announcements.push(newAnnouncement);
-    return of(newAnnouncement);
+    return newAnnouncement;
   }
 
-  updateAnnouncement(id: number, updates: Partial<Announcement>): Observable<Announcement | null> {
+  updateAnnouncement(id: number, updates: Partial<Announcement>): Announcement | null {
     const annIndex = this.announcements.findIndex(ann => ann.id === id);
     
     if (annIndex !== -1) {
@@ -139,49 +134,47 @@ export class AnnouncementService {
         ...this.announcements[annIndex],
         ...updates
       };
-      return of(this.announcements[annIndex]);
+      return this.announcements[annIndex];
     }
     
-    return of(null);
+    return null;
   }
 
-  deleteAnnouncement(id: number): Observable<boolean> {
+  deleteAnnouncement(id: number): boolean {
     const annIndex = this.announcements.findIndex(ann => ann.id === id);
     
     if (annIndex !== -1) {
       this.announcements.splice(annIndex, 1);
-      return of(true);
+      return true;
     }
     
-    return of(false);
+    return false;
   }
 
-  getAnnouncementsByPriority(priority: 'low' | 'medium' | 'high'): Observable<Announcement[]> {
-    const filteredAnnouncements = this.announcements.filter(announcement => 
+  getAnnouncementsByPriority(priority: 'low' | 'medium' | 'high'): Announcement[] {
+    return this.announcements.filter(announcement => 
       announcement.isActive && announcement.priority === priority
     );
-    return of(filteredAnnouncements);
   }
 
-  getUpcomingEvents(): Observable<Announcement[]> {
+  getUpcomingEvents(): Announcement[] {
     const now = new Date();
-    const upcomingEvents = this.announcements.filter(announcement => 
+    return this.announcements.filter(announcement => 
       announcement.isActive && 
       announcement.isEvent && 
       announcement.eventDate && 
       announcement.eventDate > now
     );
-    return of(upcomingEvents);
   }
 
-  searchAnnouncements(query: string): Observable<Announcement[]> {
+  searchAnnouncements(query: string): Announcement[] {
     const searchTerm = query.toLowerCase();
-    const filteredAnnouncements = this.announcements.filter(announcement => 
+    return this.announcements.filter(announcement => 
       announcement.isActive && (
         announcement.title.toLowerCase().includes(searchTerm) ||
         announcement.content.toLowerCase().includes(searchTerm)
       )
     );
-    return of(filteredAnnouncements);
   }
 }
+
