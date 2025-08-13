@@ -8,10 +8,8 @@
   left: 0;
   top: 0;
   z-index: 1000;
-}
-
-.sidebar.collapsed {
-  width: 70px;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Sidebar Header */
@@ -19,19 +17,12 @@
   padding: 1rem;
   border-bottom: 1px solid #495057;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
 .sidebar-title {
   font-weight: bold;
-}
-
-.sidebar-toggle {
-  color: white;
-  border: none;
-  background: none;
-  padding: 0.25rem;
 }
 
 /* User Info */
@@ -102,20 +93,6 @@
 .sidebar-footer {
   padding: 1rem;
   border-top: 1px solid #495057;
-}
-
-/* Collapsed state adjustments */
-.sidebar.collapsed .sidebar-nav .nav-link {
-  padding: 0.75rem;
-  justify-content: center;
-}
-
-.sidebar.collapsed .sidebar-nav .nav-link i {
-  margin: 0;
-}
-
-.sidebar.collapsed .sidebar-divider {
-  margin: 1rem 0.5rem;
 }
 
 /* Responsive adjustments */

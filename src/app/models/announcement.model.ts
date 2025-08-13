@@ -13,3 +13,4 @@ export interface Announcement {
   priority: 'low' | 'medium' | 'high';
   targetAudience: 'all' | 'employees' | 'managers';
 }
+

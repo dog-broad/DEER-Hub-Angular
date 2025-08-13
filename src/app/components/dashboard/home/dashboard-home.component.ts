@@ -20,9 +20,11 @@ export class DashboardHomeComponent implements OnInit {
   recentLeaves: Leave[] = [];
   recentDocuments: Document[] = [];
   recentAnnouncements: Announcement[] = [];
+  recentEvents: Announcement[] = [];
   pendingLeavesCount = 0;
   totalDocumentsCount = 0;
   activeAnnouncementsCount = 0;
+  upcomingEventsCount = 0;
 
   constructor(
     private authService: AuthService,
@@ -33,32 +35,38 @@ export class DashboardHomeComponent implements OnInit {
     this.currentUser = this.authService.getCurrentUser();
   }
 
-  async ngOnInit(): Promise<void> {
-    await this.loadDashboardData();
+  ngOnInit(): void {
+    this.loadDashboardData();
   }
 
-  private async loadDashboardData(): Promise<void> {
+  private loadDashboardData(): void {
     if (this.currentUser) {
-      try {
-        // Load user's recent leaves
-        const leaves = await this.leaveService.getLeavesByUser(this.currentUser.id);
-        this.recentLeaves = leaves.slice(0, 5); // Get last 5 leaves
-        this.pendingLeavesCount = leaves.filter(leave => leave.status === LeaveStatus.PENDING).length;
+      // Load user's recent leaves
+      const leaves = this.leaveService.getLeavesByUser(this.currentUser.id);
+      this.recentLeaves = leaves.slice(0, 5); // Get last 5 leaves
+      this.pendingLeavesCount = leaves.filter(leave => leave.status === LeaveStatus.PENDING).length;
 
-        // Load recent documents
-        const documents = this.isManager 
-          ? await this.documentService.getAllDocuments() 
-          : await this.documentService.getPublicDocuments();
+      // Load recent documents
+      if (this.authService.isManager()) {
+        const documents = this.documentService.getAllDocuments();
         this.recentDocuments = documents.slice(0, 5);
         this.totalDocumentsCount = documents.length;
-
-        // Load recent announcements
-        const announcements = await this.announcementService.getActiveAnnouncements();
-        this.recentAnnouncements = announcements.slice(0, 5);
-        this.activeAnnouncementsCount = announcements.length;
-      } catch (error) {
-        console.error('Error loading dashboard data', error);
+      } else {
+        const documents = this.documentService.getPublicDocuments();
+        this.recentDocuments = documents.slice(0, 5);
+        this.totalDocumentsCount = documents.length;
       }
+
+      // Load recent announcements (non-events)
+      const allAnnouncements = this.announcementService.getActiveAnnouncements();
+      this.recentAnnouncements = allAnnouncements
+        .filter(announcement => !announcement.isEvent)
+        .slice(0, 5);
+      this.activeAnnouncementsCount = allAnnouncements.filter(announcement => !announcement.isEvent).length;
+
+      // Load recent events
+      this.recentEvents = this.announcementService.getUpcomingEvents().slice(0, 5);
+      this.upcomingEventsCount = this.announcementService.getUpcomingEvents().length;
     }
   }
 
@@ -101,6 +109,14 @@ export class DashboardHomeComponent implements OnInit {
       month: 'short',
       day: 'numeric',
       year: 'numeric'
+    });
+  }
+
+  formatEventDate(date: Date): string {
+    return new Date(date).toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric'
     });
   }
 }

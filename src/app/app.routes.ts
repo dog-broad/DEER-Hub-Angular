@@ -14,21 +14,22 @@ export const routes: Routes = [
     component: MainComponent,
     children: [
       { path: '', component: HomeComponent },
+      { path: 'home', component: HomeComponent },
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
       { path: 'features', component: FeaturesComponent },
       { path: 'about', component: AboutComponent },
     ]
   },
-  // Dashboard routes (separate layout)
   {
     path: 'dashboard',
     component: DashboardComponent,
     children: [
       { path: '', component: DashboardHomeComponent },
-      // Placeholder routes for future components
+      { path: 'home', component: DashboardHomeComponent },
       { path: 'leaves', component: DashboardHomeComponent },
       { path: 'documents', component: DashboardHomeComponent },
+      { path: 'events', component: DashboardHomeComponent },
       { path: 'announcements', component: DashboardHomeComponent },
       { path: 'employees', component: DashboardHomeComponent },
       { path: 'profile', component: DashboardHomeComponent },

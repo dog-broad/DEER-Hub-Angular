@@ -1,21 +1,13 @@
-<div class="sidebar" [class.collapsed]="isCollapsed">
+<div class="sidebar">
   <!-- Sidebar Header -->
   <div class="sidebar-header">
     <div class="d-flex align-items-center">
-      <i class="fas fa-deer text-primary me-2"></i>
-      <span class="sidebar-title" *ngIf="!isCollapsed">DEER Hub</span>
+      <span class="sidebar-title">🦌 DEER Hub</span>
     </div>
-    <button 
-      class="btn btn-link sidebar-toggle" 
-      (click)="toggleSidebar()"
-      title="Toggle Sidebar"
-    >
-      <i class="fas fa-bars"></i>
-    </button>
   </div>
 
   <!-- User Info -->
-  <div class="user-info" *ngIf="!isCollapsed">
+  <div class="user-info">
     <div class="user-avatar">
       <i class="fas fa-user-circle fa-2x text-primary"></i>
     </div>
@@ -33,7 +25,7 @@
       <li class="nav-item">
         <a class="nav-link" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
           <i class="fas fa-tachometer-alt me-2"></i>
-          <span *ngIf="!isCollapsed">Dashboard</span>
+          <span>Dashboard</span>
         </a>
       </li>
 
@@ -41,7 +33,7 @@
       <li class="nav-item">
         <a class="nav-link" routerLink="/dashboard/leaves" routerLinkActive="active">
           <i class="fas fa-calendar-alt me-2"></i>
-          <span *ngIf="!isCollapsed">Leave Management</span>
+          <span>Leave Management</span>
         </a>
       </li>
 
@@ -49,7 +41,15 @@
       <li class="nav-item">
         <a class="nav-link" routerLink="/dashboard/documents" routerLinkActive="active">
           <i class="fas fa-file-alt me-2"></i>
-          <span *ngIf="!isCollapsed">Documents</span>
+          <span>Documents</span>
+        </a>
+      </li>
+
+      <!-- Events -->
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/dashboard/events" routerLinkActive="active">
+          <i class="fas fa-calendar-check me-2"></i>
+          <span>Events</span>
         </a>
       </li>
 
@@ -57,7 +57,7 @@
       <li class="nav-item">
         <a class="nav-link" routerLink="/dashboard/announcements" routerLinkActive="active">
           <i class="fas fa-bullhorn me-2"></i>
-          <span *ngIf="!isCollapsed">Announcements</span>
+          <span>Announcements</span>
         </a>
       </li>
 
@@ -69,7 +69,7 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="/dashboard/employees" routerLinkActive="active">
             <i class="fas fa-users me-2"></i>
-            <span *ngIf="!isCollapsed">Employee Management</span>
+            <span>Employee Management</span>
           </a>
         </li>
       </ng-container>
@@ -81,15 +81,15 @@
       <li class="nav-item">
         <a class="nav-link" routerLink="/dashboard/profile" routerLinkActive="active">
           <i class="fas fa-user-cog me-2"></i>
-          <span *ngIf="!isCollapsed">Profile</span>
+          <span>Profile</span>
         </a>
       </li>
     </ul>
   </nav>
 
   <!-- Sidebar Footer -->
-  <div class="sidebar-footer" *ngIf="!isCollapsed">
-    <button class="btn btn-outline-danger btn-sm w-100" (click)="logout()">
+  <div class="sidebar-footer">
+    <button class="btn btn-outline-danger btn-sm w-100" (click)="authService.logout()">
       <i class="fas fa-sign-out-alt me-2"></i>Logout
     </button>
   </div>

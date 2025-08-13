@@ -1,0 +1,63 @@
+<header class="dashboard-header">
+  <div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center">
+      <!-- Left side - Menu Toggle -->
+      <div class="d-flex align-items-center">
+        <button 
+          class="btn btn-link sidebar-toggle me-3"
+          (click)="toggleSidebar()"
+        >
+          <i class="fas fa-bars"></i>
+        </button>
+        <span class="header-title">🦌 DEER Hub</span>
+      </div>
+
+      <!-- Right side - User Menu -->
+      <div class="dropdown">
+        <button 
+          class="btn btn-link dropdown-toggle" 
+          type="button" 
+          data-bs-toggle="dropdown"
+        >
+          <i class="fas fa-user-circle me-2"></i>
+          {{ currentUser?.firstName }}
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" routerLink="/dashboard/profile">Profile</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item text-danger" href="#" (click)="logout()">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Simple Mobile Navigation -->
+  <div class="mobile-nav" [class.show]="isSidebarOpen">
+    <div class="mobile-nav-header">
+      <span>Menu</span>
+      <button class="btn btn-link close-nav" (click)="toggleSidebar()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <nav class="mobile-nav-menu">
+      <a class="nav-link" routerLink="/dashboard" (click)="toggleSidebar()">Dashboard</a>
+      <a class="nav-link" routerLink="/dashboard/leaves" (click)="toggleSidebar()">Leave Management</a>
+      <a class="nav-link" routerLink="/dashboard/documents" (click)="toggleSidebar()">Documents</a>
+      <a class="nav-link" routerLink="/dashboard/events" (click)="toggleSidebar()">Events</a>
+      <a class="nav-link" routerLink="/dashboard/announcements" (click)="toggleSidebar()">Announcements</a>
+      
+      <ng-container *ngIf="isManager">
+        <hr class="nav-divider">
+        <a class="nav-link" routerLink="/dashboard/employees" (click)="toggleSidebar()">Employee Management</a>
+      </ng-container>
+      
+      <hr class="nav-divider">
+      <a class="nav-link" routerLink="/dashboard/profile" (click)="toggleSidebar()">Profile</a>
+      <a class="nav-link text-danger" href="#" (click)="logout()">Logout</a>
+    </nav>
+  </div>
+
+  <!-- Simple Overlay -->
+  <div class="mobile-nav-overlay" [class.show]="isSidebarOpen" (click)="toggleSidebar()"></div>
+</header>

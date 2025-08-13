@@ -30,14 +30,14 @@
     <div class="col-md-3">
       <div class="card">
         <div class="card-body text-center">
-          <h4 class="text-warning">{{ currentUser?.department }}</h4>
-          <p class="card-text">Department</p>
+          <h4 class="text-warning">{{ upcomingEventsCount }}</h4>
+          <p class="card-text">Upcoming Events</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Recent Leaves -->
+  <!-- Recent Leaves and Documents -->
   <div class="row mb-4">
     <div class="col-md-6">
       <div class="card">
@@ -49,22 +49,21 @@
             <p>No leave requests found</p>
           </div>
           <div *ngFor="let leave of recentLeaves" class="mb-3 p-2 border-bottom">
-            <div class="d-flex justify-content-between">
-              <div>
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="flex-grow-1">
                 <strong>{{ leave.leaveType | titlecase }} Leave</strong><br>
                 <small>{{ formatDate(leave.startDate) }} - {{ formatDate(leave.endDate) }}</small>
+                <p class="mb-0 mt-1">{{ leave.reason }}</p>
               </div>
-              <span [class]="getStatusBadgeClass(leave.status)">
+              <span [class]="getStatusBadgeClass(leave.status)" class="ms-2">
                 {{ getStatusText(leave.status) }}
               </span>
             </div>
-            <p class="mb-0 mt-1">{{ leave.reason }}</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Recent Documents -->
     <div class="col-md-6">
       <div class="card">
         <div class="card-header">
@@ -88,9 +87,40 @@
     </div>
   </div>
 
-  <!-- Recent Announcements -->
+  <!-- Events and Announcements -->
   <div class="row">
-    <div class="col-12">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h5>Upcoming Events</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="recentEvents.length === 0" class="text-center">
+            <p>No upcoming events</p>
+          </div>
+          <div *ngFor="let event of recentEvents" class="mb-3 p-2 border-bottom">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="flex-grow-1">
+                <h6>{{ event.title }}</h6>
+                <p>{{ event.content }}</p>
+                <div>
+                  <small><strong>Date:</strong> {{ formatEventDate(event.eventDate!) }}</small><br>
+                  <small><strong>Time:</strong> {{ event.startTime }} - {{ event.endTime }}</small><br>
+                  <small><strong>Location:</strong> {{ event.location }}</small>
+                </div>
+              </div>
+              <span [class]="event.priority === 'high' ? 'badge bg-danger' : 
+                              event.priority === 'medium' ? 'badge bg-warning' : 'badge bg-success'" 
+                    class="ms-2">
+                {{ event.priority | titlecase }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
       <div class="card">
         <div class="card-header">
           <h5>Recent Announcements</h5>
@@ -100,14 +130,19 @@
             <p>No announcements found</p>
           </div>
           <div *ngFor="let announcement of recentAnnouncements" class="mb-3 p-2 border-bottom">
-            <h6>{{ announcement.title }}</h6>
-            <p>{{ announcement.content }}</p>
-            <div class="d-flex justify-content-between">
-              <span [class]="announcement.priority === 'high' ? 'badge bg-danger' : 
-                              announcement.priority === 'medium' ? 'badge bg-warning' : 'badge bg-success'">
-                {{ announcement.priority | titlecase }}
-              </span>
-              <small>{{ formatDate(announcement.createdDate) }}</small>
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="flex-grow-1">
+                <h6>{{ announcement.title }}</h6>
+                <p>{{ announcement.content }}</p>
+              </div>
+              <div class="text-end ms-2">
+                <span [class]="announcement.priority === 'high' ? 'badge bg-danger' : 
+                                announcement.priority === 'medium' ? 'badge bg-warning' : 'badge bg-success'">
+                  {{ announcement.priority | titlecase }}
+                </span>
+                <br>
+                <small>{{ formatDate(announcement.createdDate) }}</small>
+              </div>
             </div>
           </div>
         </div>

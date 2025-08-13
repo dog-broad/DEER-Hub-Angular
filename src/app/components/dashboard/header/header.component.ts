@@ -4,16 +4,21 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
-  selector: 'app-sidebar',
+  selector: 'app-header',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.css']
+  templateUrl: './header.component.html',
+  styleUrl: './header.component.css'
 })
-export class SidebarComponent {
+export class HeaderComponent {
+  isSidebarOpen = false;
 
   constructor(public authService: AuthService, private router: Router) {}
 
+  toggleSidebar(): void {
+    this.isSidebarOpen = !this.isSidebarOpen;
+    // You can emit an event here to communicate with parent component
+  }
 
   get isManager(): boolean {
     return this.authService.isManager();

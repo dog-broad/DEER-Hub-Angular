@@ -26,3 +26,4 @@ export interface Leave {
   approvedDate?: Date;
   comments?: string;
 }
+

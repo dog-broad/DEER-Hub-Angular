@@ -64,7 +64,7 @@ export class LeaveService {
         }
     ];
 
-    private nextId = 5;
+    private nextId = 6;
 
     getLeavesByUser(userId: number): Leave[] {
         return this.leaves.filter(leave => leave.userId === userId);
