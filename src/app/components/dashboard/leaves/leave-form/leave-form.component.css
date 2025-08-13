@@ -1,0 +1,44 @@
+/* Basic form styles */
+.container {
+  padding: 20px;
+}
+
+.card {
+  border: 1px solid #dee2e6;
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+  border-color: #dc3545;
+}
+
+.invalid-feedback {
+  display: block;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+}
+
+.alert-info {
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+  color: #0c5460;
+}
+
+.form-text {
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+.gap-2 {
+  gap: 0.5rem !important;
+}

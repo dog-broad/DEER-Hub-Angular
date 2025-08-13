@@ -1,7 +1,8 @@
 export enum LeaveStatus {
   PENDING = 'pending',
   APPROVED = 'approved',
-  REJECTED = 'rejected'
+  REJECTED = 'rejected',
+  CANCELLED = 'cancelled'
 }
 
 export enum LeaveType {

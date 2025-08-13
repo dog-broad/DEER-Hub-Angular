@@ -1,0 +1,87 @@
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{{ isEditMode ? 'Edit Leave Request' : 'Apply for Leave' }}</h2>
+    <a routerLink="/dashboard/leaves" class="btn btn-outline-secondary">
+      <i class="fas fa-arrow-left me-2"></i>Back to List
+    </a>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <form [formGroup]="leaveForm" (ngSubmit)="onSubmit()">
+            <!-- Leave Type -->
+            <div class="mb-3">
+              <label for="leaveType" class="form-label">Leave Type *</label>
+              <select class="form-select" id="leaveType" formControlName="leaveType"
+                      [class.is-invalid]="leaveForm.get('leaveType')?.invalid && leaveForm.get('leaveType')?.touched">
+                <option value="">Select Leave Type</option>
+                <option *ngFor="let type of leaveTypes" [value]="type">
+                  {{ getLeaveTypeText(type) }}
+                </option>
+              </select>
+              <div class="invalid-feedback" *ngIf="leaveForm.get('leaveType')?.invalid && leaveForm.get('leaveType')?.touched">
+                Please select a leave type.
+              </div>
+            </div>
+
+            <!-- Date Range -->
+            <div class="row">
+              <div class="col-md-6">
+                <label for="startDate" class="form-label">Start Date *</label>
+                <input type="date" class="form-control" id="startDate" formControlName="startDate"
+                       [class.is-invalid]="leaveForm.get('startDate')?.invalid && leaveForm.get('startDate')?.touched">
+                <div class="invalid-feedback" *ngIf="leaveForm.get('startDate')?.invalid && leaveForm.get('startDate')?.touched">
+                  Start date is required.
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="endDate" class="form-label">End Date *</label>
+                <input type="date" class="form-control" id="endDate" formControlName="endDate"
+                       [class.is-invalid]="leaveForm.get('endDate')?.invalid && leaveForm.get('endDate')?.touched">
+                <div class="invalid-feedback" *ngIf="leaveForm.get('endDate')?.invalid && leaveForm.get('endDate')?.touched">
+                  End date is required.
+                </div>
+              </div>
+            </div>
+
+            <!-- Days Calculation -->
+            <div class="mb-3" *ngIf="calculateDays() > 0">
+              <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>Total Days:</strong> {{ calculateDays() }} day(s)
+              </div>
+            </div>
+
+            <!-- Reason -->
+            <div class="mb-3">
+              <label for="reason" class="form-label">Reason *</label>
+              <textarea class="form-control" id="reason" rows="4" formControlName="reason"
+                        [class.is-invalid]="leaveForm.get('reason')?.invalid && leaveForm.get('reason')?.touched"
+                        placeholder="Please provide a detailed reason for your leave request..."></textarea>
+              <div class="invalid-feedback" *ngIf="leaveForm.get('reason')?.invalid && leaveForm.get('reason')?.touched">
+                <div *ngIf="leaveForm.get('reason')?.errors?.['required']">Reason is required.</div>
+                <div *ngIf="leaveForm.get('reason')?.errors?.['minlength']">Reason must be at least 10 characters.</div>
+              </div>
+              <div class="form-text" *ngIf="leaveForm.get('reason')?.value">
+                {{ leaveForm.get('reason')?.value?.length || 0 }}/10 characters minimum
+              </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="d-flex justify-content-end gap-2 mt-4">
+              <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary" [disabled]="leaveForm.invalid">
+                <i class="fas fa-save me-2"></i>
+                {{ isEditMode ? 'Update' : 'Submit' }} Request
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

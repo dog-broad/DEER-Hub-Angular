@@ -1,0 +1,136 @@
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Leave Management</h2>
+    <div *ngIf="isEmployee">
+      <a routerLink="/dashboard/leaves/new" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i>Apply for Leave
+      </a>
+    </div>
+  </div>
+
+  <!-- Filters and Search -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-3">
+          <label for="statusFilter" class="form-label">Status</label>
+          <select class="form-select" id="statusFilter" [(ngModel)]="selectedStatus" (change)="onStatusChange()">
+            <option value="all">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label for="typeFilter" class="form-label">Leave Type</label>
+          <select class="form-select" id="typeFilter" [(ngModel)]="selectedType" (change)="onTypeChange()">
+            <option value="all">All Types</option>
+            <option value="sick">Sick Leave</option>
+            <option value="vacation">Vacation Leave</option>
+            <option value="personal">Personal Leave</option>
+            <option value="maternity">Maternity Leave</option>
+            <option value="paternity">Paternity Leave</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label for="searchInput" class="form-label">Search</label>
+          <input type="text" class="form-control" id="searchInput" 
+                 [(ngModel)]="searchTerm" (input)="onSearchChange()"
+                 [placeholder]="isManager ? 'Search by reason or employee name...' : 'Search by reason...'">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leave List -->
+  <div class="card">
+    <div class="card-header">
+      <h5 class="mb-0">
+        {{ isManager ? 'All Leave Requests' : 'My Leave Requests' }}
+        <span class="badge bg-primary ms-2">{{ filteredLeaves.length }}</span>
+      </h5>
+    </div>
+    <div class="card-body">
+      <div *ngIf="filteredLeaves.length === 0" class="text-center py-5">
+        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+        <h5 class="text-muted">No Leave Requests</h5>
+        <p class="text-muted">
+          {{ isManager ? 'No leave requests match your filters.' : 'You haven\'t applied for any leave yet.' }}
+        </p>
+        <div *ngIf="isEmployee">
+          <a routerLink="/dashboard/leaves/new" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Apply for Leave
+          </a>
+        </div>
+      </div>
+
+      <div *ngFor="let leave of filteredLeaves" class="card mb-3">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h6 class="card-title mb-1">
+                    <span [class]="getLeaveTypeBadgeClass(leave.leaveType)" class="me-2">
+                      {{ getLeaveTypeText(leave.leaveType) }}
+                    </span>
+                    <span [class]="getStatusBadgeClass(leave.status)">
+                      {{ getStatusText(leave.status) }}
+                    </span>
+                  </h6>
+                  <p class="card-text mb-2">{{ leave.reason }}</p>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <small class="text-muted">
+                        <strong>From:</strong> {{ formatDate(leave.startDate) }}<br>
+                        <strong>To:</strong> {{ formatDate(leave.endDate) }}
+                      </small>
+                    </div>
+                    <div class="col-md-6">
+                      <small class="text-muted">
+                        <strong>Applied:</strong> {{ formatDate(leave.appliedDate) }}
+                      </small>
+                    </div>
+                  </div>
+                  <div *ngIf="isManager" class="mt-2">
+                    <small class="text-muted">
+                      <strong>Employee ID:</strong> {{ leave.userId }}
+                    </small>
+                    <br>
+                    <small class="text-muted">
+                      <strong>Name:</strong> {{ getNameByUserId(leave.userId) }}
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="d-flex flex-column gap-2">
+                <a [routerLink]="['/dashboard/leaves', leave.id]" class="btn btn-sm btn-outline-primary">
+                  <i class="fas fa-eye me-1"></i>View Details
+                </a>
+                <div *ngIf="canCancel(leave)" class="d-flex gap-1">
+                  <a [routerLink]="['/dashboard/leaves/edit', leave.id]" class="btn btn-sm btn-outline-warning flex-fill">
+                    <i class="fas fa-edit me-1"></i>Edit
+                  </a>
+                  <button class="btn btn-sm btn-outline-danger" (click)="cancelLeave(leave.id)">
+                    <i class="fas fa-times me-1"></i>Cancel
+                  </button>
+                </div>
+                <div *ngIf="canApproveReject(leave)" class="d-flex gap-1">
+                  <button class="btn btn-sm btn-success flex-fill" (click)="approveLeave(leave.id)">
+                    <i class="fas fa-check me-1"></i>Approve
+                  </button>
+                  <button class="btn btn-sm btn-danger flex-fill" (click)="rejectLeave(leave.id)">
+                    <i class="fas fa-times me-1"></i>Reject
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

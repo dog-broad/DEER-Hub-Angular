@@ -1,0 +1,147 @@
+<div class="container" *ngIf="leave && canView()">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Leave Request Details</h2>
+    <a routerLink="/dashboard/leaves" class="btn btn-outline-secondary">
+      <i class="fas fa-arrow-left me-2"></i>Back to List
+    </a>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <!-- Leave Details Card -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Leave Information</h5>
+            <span [class]="getStatusBadgeClass(leave.status)">
+              {{ getStatusText(leave.status) }}
+            </span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>Leave Type:</strong></p>
+              <span [class]="getLeaveTypeBadgeClass(leave.leaveType)">
+                {{ getLeaveTypeText(leave.leaveType) }}
+              </span>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Total Days:</strong></p>
+              <span class="badge bg-info">{{ calculateDays() }} day(s)</span>
+            </div>
+          </div>
+          
+          <hr>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>Start Date:</strong></p>
+              <p>{{ formatDate(leave.startDate) }}</p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>End Date:</strong></p>
+              <p>{{ formatDate(leave.endDate) }}</p>
+            </div>
+          </div>
+          
+          <hr>
+          
+          <div>
+            <p><strong>Reason:</strong></p>
+            <p class="text-muted">{{ leave.reason }}</p>
+          </div>
+          
+          <hr>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>Applied Date:</strong></p>
+              <p>{{ formatDate(leave.appliedDate) }}</p>
+            </div>
+            <div class="col-md-6" *ngIf="leave.approvedDate">
+              <p><strong>Processed Date:</strong></p>
+              <p>{{ formatDate(leave.approvedDate) }}</p>
+            </div>
+          </div>
+
+          <hr>
+          
+          <div *ngIf="leave.comments" class="row">
+            <div class="col-md-6">
+              <p><strong>Manager Comments:</strong></p>
+              <p class="text-muted">{{ leave.comments }}</p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Approved By:</strong></p>
+              <p>{{ getNameByUserId(leave.approvedBy || 0) }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <!-- Approval Actions (Manager Only) -->
+      <div class="card" *ngIf="canApproveReject()">
+        <div class="card-header">
+          <h5 class="mb-0">Approval Actions</h5>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label for="approvalComment" class="form-label">Comment *</label>
+            <textarea class="form-control" id="approvalComment" rows="3" 
+                      [(ngModel)]="approvalComment" 
+                      placeholder="Provide a comment for your decision..."></textarea>
+          </div>
+          
+          <div class="d-grid gap-2">
+            <button class="btn btn-success" (click)="approveLeave()">
+              <i class="fas fa-check me-2"></i>Approve Leave
+            </button>
+            <button class="btn btn-danger" (click)="rejectLeave()">
+              <i class="fas fa-times me-2"></i>Reject Leave
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status Timeline -->
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Status Timeline</h5>
+        </div>
+        <div class="card-body">
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-marker bg-primary"></div>
+              <div class="timeline-content">
+                <h6>Leave Request Submitted</h6>
+                <small class="text-muted">{{ formatDate(leave.appliedDate) }}</small>
+              </div>
+            </div>
+            
+            <div class="timeline-item" *ngIf="leave.status !== 'pending'">
+              <div class="timeline-marker" [class]="leave.status === 'approved' ? 'bg-success' : 'bg-danger'"></div>
+              <div class="timeline-content">
+                <h6>Request {{ leave.status === 'approved' ? 'Approved' : 'Rejected' }}</h6>
+                <small class="text-muted" *ngIf="leave.approvedDate">{{ formatDate(leave.approvedDate) }}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" *ngIf="!canView()">
+  <div class="text-center py-5">
+    <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+    <h5>Access Denied</h5>
+    <p class="text-muted">You don't have permission to view this leave request.</p>
+    <a routerLink="/dashboard/leaves" class="btn btn-primary">
+      <i class="fas fa-arrow-left me-2"></i>Back to Leave List
+    </a>
+  </div>
+</div>

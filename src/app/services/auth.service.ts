@@ -90,6 +90,10 @@ export class AuthService {
     return this.currentUser;
   }
 
+  getUserById(userId: number): User | undefined {
+    return this.users.find(u => u.id === userId);
+  }
+
   isLoggedIn(): boolean {
     return this.currentUser !== null;
   }

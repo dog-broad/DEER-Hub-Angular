@@ -9,12 +9,13 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { DashboardHomeComponent } from './components/dashboard/home/dashboard-home.component';
 import { AnnouncementsComponent } from './components/dashboard/announcements/announcements.component';
 import { AnnouncementFormComponent } from './components/dashboard/announcements/announcement-form/announcement-form.component';
+import { LeavesComponent } from './components/dashboard/leaves/leaves.component';
+import { LeaveFormComponent } from './components/dashboard/leaves/leave-form/leave-form.component';
+import { LeaveDetailsComponent } from './components/dashboard/leaves/leave-details/leave-details.component';
 
 export const routes: Routes = [
   {
-    path: '',
-    component: MainComponent,
-    children: [
+    path: '', component: MainComponent, children: [
       { path: '', component: HomeComponent },
       { path: 'home', component: HomeComponent },
       { path: 'login', component: LoginComponent },
@@ -24,13 +25,17 @@ export const routes: Routes = [
     ]
   },
   {
-    path: 'dashboard',
-    component: DashboardComponent,
-    children: [
+    path: 'dashboard', component: DashboardComponent, children: [
       { path: '', component: DashboardHomeComponent },
       { path: 'home', component: DashboardHomeComponent },
-      { path: 'leaves', component: DashboardHomeComponent },
-      { path: 'documents', component: DashboardHomeComponent },
+      { path: 'leaves', component: LeavesComponent },
+      { path: 'leaves/new', component: LeaveFormComponent },
+      { path: 'leaves/edit/:id', component: LeaveFormComponent },
+      { path: 'leaves/:id', component: LeaveDetailsComponent },
+      { path: 'documents', component: DocumentsComponent },
+      { path: 'documents/new', component: DocumentFormComponent },
+      { path: 'documents/edit/:id', component: DocumentFormComponent },
+      { path: 'documents/:id', component: DocumentDetailsComponent },
       { path: 'announcements', component: AnnouncementsComponent },
       { path: 'announcements/new', component: AnnouncementFormComponent },
       { path: 'announcements/edit/:id', component: AnnouncementFormComponent },
