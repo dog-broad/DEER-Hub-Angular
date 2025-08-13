@@ -1,0 +1,126 @@
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{{ isEditMode ? 'Edit' : 'Add New' }} Announcement</h2>
+    <a routerLink="/dashboard/announcements" class="btn btn-outline-secondary">
+      <i class="fas fa-arrow-left me-2"></i>Back to List
+    </a>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <form [formGroup]="announcementForm" (ngSubmit)="onSubmit()">
+            <!-- Type Selection -->
+            <div class="mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="isEvent" formControlName="isEvent" (change)="onIsEventChange()">
+                <label class="form-check-label" for="isEvent">
+                  This is an event (with date, time, and location)
+                </label>
+              </div>
+            </div>
+
+            <!-- Title -->
+            <div class="mb-3">
+              <label for="title" class="form-label">Title *</label>
+              <input type="text" class="form-control" id="title" formControlName="title" 
+                     [class.is-invalid]="announcementForm.get('title')?.invalid && announcementForm.get('title')?.touched">
+              <div class="invalid-feedback" *ngIf="announcementForm.get('title')?.invalid && announcementForm.get('title')?.touched">
+                <div *ngIf="announcementForm.get('title')?.errors?.['required']">Title is required.</div>
+                <div *ngIf="announcementForm.get('title')?.errors?.['minlength']">Title must be at least 3 characters.</div>
+              </div>
+            </div>
+
+            <!-- Content -->
+            <div class="mb-3">
+              <label for="content" class="form-label">Content *</label>
+              <textarea class="form-control" id="content" rows="4" formControlName="content"
+                        [class.is-invalid]="announcementForm.get('content')?.invalid && announcementForm.get('content')?.touched"></textarea>
+              <div class="invalid-feedback" *ngIf="announcementForm.get('content')?.invalid && announcementForm.get('content')?.touched">
+                <div *ngIf="announcementForm.get('content')?.errors?.['required']">Content is required.</div>
+                <div *ngIf="announcementForm.get('content')?.errors?.['minlength']">Content must be at least 10 characters.</div>
+              </div>
+            </div>
+
+            <!-- Priority -->
+            <div class="mb-3">
+              <label for="priority" class="form-label">Priority *</label>
+              <select class="form-select" id="priority" formControlName="priority">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+
+            <!-- Target Audience -->
+            <div class="mb-3">
+              <label for="targetAudience" class="form-label">Target Audience *</label>
+              <select class="form-select" id="targetAudience" formControlName="targetAudience">
+                <option value="all">All Employees</option>
+                <option value="employees">Employees Only</option>
+                <option value="managers">Managers Only</option>
+              </select>
+            </div>
+
+            <!-- Event-specific fields (shown only when isEvent is true) -->
+            <div *ngIf="announcementForm.get('isEvent')?.value">
+              <hr class="my-4">
+              <h5>Event Details</h5>
+
+              <!-- Event Date -->
+              <div class="mb-3">
+                <label for="eventDate" class="form-label">Event Date *</label>
+                <input type="date" class="form-control" id="eventDate" formControlName="eventDate"
+                       [class.is-invalid]="announcementForm.get('eventDate')?.invalid && announcementForm.get('eventDate')?.touched">
+                <div class="invalid-feedback" *ngIf="announcementForm.get('eventDate')?.invalid && announcementForm.get('eventDate')?.touched">
+                  Event date is required.
+                </div>
+              </div>
+
+              <!-- Time Range -->
+              <div class="row">
+                <div class="col-md-6">
+                  <label for="startTime" class="form-label">Start Time *</label>
+                  <input type="time" class="form-control" id="startTime" formControlName="startTime"
+                         [class.is-invalid]="announcementForm.get('startTime')?.invalid && announcementForm.get('startTime')?.touched">
+                  <div class="invalid-feedback" *ngIf="announcementForm.get('startTime')?.invalid && announcementForm.get('startTime')?.touched">
+                    Start time is required.
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label for="endTime" class="form-label">End Time *</label>
+                  <input type="time" class="form-control" id="endTime" formControlName="endTime"
+                         [class.is-invalid]="announcementForm.get('endTime')?.invalid && announcementForm.get('endTime')?.touched">
+                  <div class="invalid-feedback" *ngIf="announcementForm.get('endTime')?.invalid && announcementForm.get('endTime')?.touched">
+                    End time is required.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Location -->
+              <div class="mb-3">
+                <label for="location" class="form-label">Location *</label>
+                <input type="text" class="form-control" id="location" formControlName="location"
+                       [class.is-invalid]="announcementForm.get('location')?.invalid && announcementForm.get('location')?.touched">
+                <div class="invalid-feedback" *ngIf="announcementForm.get('location')?.invalid && announcementForm.get('location')?.touched">
+                  Location is required.
+                </div>
+              </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="d-flex justify-content-end gap-2 mt-4">
+              <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary" [disabled]="announcementForm.invalid">
+                {{ isEditMode ? 'Update' : 'Create' }} {{ announcementForm.get('isEvent')?.value ? 'Event' : 'Announcement' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

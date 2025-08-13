@@ -83,10 +83,51 @@ export class AnnouncementService {
       isActive: true,
       priority: 'medium',
       targetAudience: 'all'
+    },
+    {
+      id: 7,
+      title: 'Quarterly Financial Review',
+      content: 'Join us for the quarterly financial review meeting to discuss our financial performance and future projections.',
+      eventDate: new Date('2025-10-01'),
+      startTime: '15:00',
+      endTime: '17:00',
+      location: 'Main Conference Room',
+      isEvent: true,
+      createdBy: 1,
+      createdDate: new Date('2025-08-01'),
+      isActive: true,
+      priority: 'high',
+      targetAudience: 'all'
+    },
+    {
+      id: 8,
+      title: 'Office Potluck',
+      content: 'Bring your favorite dish to share with the team at our office potluck on Friday!',
+      isEvent: false,
+      createdBy: 2,
+      createdDate: new Date('2025-08-10'),
+      isActive: true,
+      priority: 'medium',
+      targetAudience: 'all'
+    },
+    {
+      id: 9,
+      title: 'Health and Wellness Fair',
+      content: 'Participate in our Health and Wellness Fair to learn about health resources and activities available to employees.',
+      eventDate: new Date('2025-09-30'),
+      startTime: '09:00',
+      endTime: '15:00',
+      location: 'Company Gym',
+      isEvent: true,
+      createdBy: 2,
+      createdDate: new Date('2025-08-15'),
+      isActive: true,
+      priority: 'low',
+      targetAudience: 'employees'
     }
   ];
 
-  private nextId = 7;
+  private nextId = 10;
 
   constructor() { }
 
@@ -177,4 +218,3 @@ export class AnnouncementService {
     );
   }
 }
-

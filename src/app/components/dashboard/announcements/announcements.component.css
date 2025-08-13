@@ -1,0 +1,33 @@
+/* Basic announcements styles */
+.container {
+  padding: 20px;
+}
+
+.card {
+  border: 1px solid #dee2e6;
+  margin-bottom: 1rem;
+}
+
+.card-title {
+  margin-bottom: 0.5rem;
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.nav-tabs .nav-link {
+  color: #6c757d;
+}
+
+.nav-tabs .nav-link.active {
+  color: #495057;
+  background-color: #fff;
+  border-color: #dee2e6 #dee2e6 #fff;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+} 

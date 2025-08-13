@@ -1,0 +1,29 @@
+/* Basic form styles */
+.container {
+  padding: 20px;
+}
+
+.card {
+  border: 1px solid #dee2e6;
+}
+
+.form-label {
+  font-weight: 500;
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+  border-color: #dc3545;
+}
+
+.invalid-feedback {
+  display: block;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+}

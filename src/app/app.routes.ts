@@ -7,6 +7,8 @@ import { FeaturesComponent } from './components/features/features.component';
 import { AboutComponent } from './components/about/about.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { DashboardHomeComponent } from './components/dashboard/home/dashboard-home.component';
+import { AnnouncementsComponent } from './components/dashboard/announcements/announcements.component';
+import { AnnouncementFormComponent } from './components/dashboard/announcements/announcement-form/announcement-form.component';
 
 export const routes: Routes = [
   {
@@ -29,8 +31,9 @@ export const routes: Routes = [
       { path: 'home', component: DashboardHomeComponent },
       { path: 'leaves', component: DashboardHomeComponent },
       { path: 'documents', component: DashboardHomeComponent },
-      { path: 'events', component: DashboardHomeComponent },
-      { path: 'announcements', component: DashboardHomeComponent },
+      { path: 'announcements', component: AnnouncementsComponent },
+      { path: 'announcements/new', component: AnnouncementFormComponent },
+      { path: 'announcements/edit/:id', component: AnnouncementFormComponent },
       { path: 'employees', component: DashboardHomeComponent },
       { path: 'profile', component: DashboardHomeComponent },
     ]

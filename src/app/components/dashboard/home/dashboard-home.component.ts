@@ -61,11 +61,11 @@ export class DashboardHomeComponent implements OnInit {
       const allAnnouncements = this.announcementService.getActiveAnnouncements();
       this.recentAnnouncements = allAnnouncements
         .filter(announcement => !announcement.isEvent)
-        .slice(0, 5);
+        .slice(0, 4);
       this.activeAnnouncementsCount = allAnnouncements.filter(announcement => !announcement.isEvent).length;
 
       // Load recent events
-      this.recentEvents = this.announcementService.getUpcomingEvents().slice(0, 5);
+      this.recentEvents = this.announcementService.getUpcomingEvents().slice(0, 4);
       this.upcomingEventsCount = this.announcementService.getUpcomingEvents().length;
     }
   }

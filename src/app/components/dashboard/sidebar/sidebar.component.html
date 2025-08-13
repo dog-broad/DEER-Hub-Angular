@@ -45,14 +45,6 @@
         </a>
       </li>
 
-      <!-- Events -->
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/dashboard/events" routerLinkActive="active">
-          <i class="fas fa-calendar-check me-2"></i>
-          <span>Events</span>
-        </a>
-      </li>
-
       <!-- Announcements -->
       <li class="nav-item">
         <a class="nav-link" routerLink="/dashboard/announcements" routerLinkActive="active">
@@ -89,7 +81,7 @@
 
   <!-- Sidebar Footer -->
   <div class="sidebar-footer">
-    <button class="btn btn-outline-danger btn-sm w-100" (click)="authService.logout()">
+    <button class="btn btn-outline-danger btn-sm w-100" (click)="logout()">
       <i class="fas fa-sign-out-alt me-2"></i>Logout
     </button>
   </div>
