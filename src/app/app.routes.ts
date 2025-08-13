@@ -12,6 +12,9 @@ import { AnnouncementFormComponent } from './components/dashboard/announcements/
 import { LeavesComponent } from './components/dashboard/leaves/leaves.component';
 import { LeaveFormComponent } from './components/dashboard/leaves/leave-form/leave-form.component';
 import { LeaveDetailsComponent } from './components/dashboard/leaves/leave-details/leave-details.component';
+import { DocumentsComponent } from './components/dashboard/documents/documents.component';
+import { DocumentFormComponent } from './components/dashboard/documents/document-form/document-form.component';
+import { DocumentDetailsComponent } from './components/dashboard/documents/document-details/document-details.component';
 
 export const routes: Routes = [
   {

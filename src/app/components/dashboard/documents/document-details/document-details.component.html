@@ -1,0 +1,60 @@
+<div class="container" *ngIf="document && canView()">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Document Details</h2>
+    <a routerLink="/dashboard/documents" class="btn btn-outline-secondary">
+      <i class="fas fa-arrow-left me-2"></i>Back to List
+    </a>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <h4>{{ document.title }}</h4>
+          <p class="text-muted">{{ document.description }}</p>
+          
+          <div class="mb-3">
+            <span class="badge" [class]="document.isPublic ? 'bg-success' : 'bg-warning'">
+              {{ document.isPublic ? 'Public' : 'Private' }}
+            </span>
+          </div>
+          
+          <div class="mb-3">
+            <strong>File:</strong> {{ document.fileName }}<br>
+            <strong>Size:</strong> {{ formatFileSize(document.fileSize) }}<br>
+            <strong>Type:</strong> {{ getFileTypeName(document.fileType) }}<br>
+            <strong>Uploaded:</strong> {{ formatDate(document.uploadedDate) }}<br>
+            <strong>By:</strong> {{ getUploaderName(document.uploadedBy) }}
+          </div>
+          
+          <div class="mb-3" *ngIf="document.tags.length > 0">
+            <strong>Tags:</strong>
+            <span *ngFor="let tag of document.tags" class="badge bg-light text-dark me-1">{{ tag }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <button class="btn btn-primary mb-2 w-100" (click)="downloadDocument()">Download</button>
+          <a *ngIf="canEdit()" [routerLink]="['/dashboard/documents/edit', document.id]" 
+             class="btn btn-warning mb-2 w-100">Edit</a>
+          <button *ngIf="canDelete()" class="btn btn-danger w-100" (click)="deleteDocument()">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" *ngIf="!canView()">
+  <div class="text-center py-5">
+    <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+    <h5>Access Denied</h5>
+    <p class="text-muted">You don't have permission to view this document.</p>
+    <a routerLink="/dashboard/documents" class="btn btn-primary">
+      <i class="fas fa-arrow-left me-2"></i>Back to Document List
+    </a>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+/* Simple styles */
+.container {
+  padding: 20px;
+}
+
+.card {
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+}
+
+.badge {
+  font-size: 12px;
+  padding: 4px 8px;
+}
+
+.btn-sm {
+  padding: 4px 8px;
+  font-size: 14px;
+}
+
+.form-control {
+  border: 1px solid #ccc;
+}
+
+.text-muted {
+  color: #666;
+}

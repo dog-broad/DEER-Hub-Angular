@@ -1,0 +1,51 @@
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Document Management</h2>
+    <div>
+      <a routerLink="/dashboard/documents/new" class="btn btn-primary">
+        <i class="fas fa-upload me-2"></i>Upload Document
+      </a>
+    </div>
+  </div>
+
+  <!-- Simple Search -->
+  <div class="mb-3">
+    <input type="text" class="form-control" 
+           [(ngModel)]="searchTerm" (input)="onSearchChange()"
+           placeholder="Search documents...">
+  </div>
+
+  <!-- Simple Document List -->
+  <div *ngIf="filteredDocuments.length === 0" class="text-center py-4">
+    <p>No documents found.</p>
+    <a routerLink="/dashboard/documents/new" class="btn btn-primary">Upload Document</a>
+  </div>
+
+  <div class="row">
+    <div *ngFor="let document of filteredDocuments" class="col-md-6 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h6>{{ document.title }}</h6>
+          <p class="text-muted">{{ document.description }}</p>
+          <div class="mb-2">
+            <span class="badge" [class]="document.isPublic ? 'bg-success' : 'bg-warning'">
+              {{ document.isPublic ? 'Public' : 'Private' }}
+            </span>
+          </div>
+          <div class="mb-2">
+            <small class="text-muted">By: {{ getUploaderName(document.uploadedBy) }} | {{ formatDate(document.uploadedDate) }}</small>
+          </div>
+          <div>
+            <button class="btn btn-sm btn-primary me-2" (click)="downloadDocument(document)">Download</button>
+            <a *ngIf="canView(document)" [routerLink]="['/dashboard/documents', document.id]" 
+               class="btn btn-sm btn-outline-secondary me-2">View</a>
+            <a *ngIf="canEdit(document)" [routerLink]="['/dashboard/documents/edit', document.id]" 
+               class="btn btn-sm btn-outline-warning me-2">Edit</a>
+            <button *ngIf="canDelete(document)" class="btn btn-sm btn-outline-danger me-2" 
+                    (click)="deleteDocument(document.id)">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
