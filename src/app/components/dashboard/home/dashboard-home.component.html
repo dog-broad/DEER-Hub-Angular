@@ -1,0 +1,117 @@
+<div class="container">
+  <h2 class="mb-4">Dashboard</h2>
+  
+  <!-- Simple Stats Row -->
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <h4 class="text-primary">{{ pendingLeavesCount }}</h4>
+          <p class="card-text">Pending Leaves</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <h4 class="text-success">{{ totalDocumentsCount }}</h4>
+          <p class="card-text">Total Documents</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <h4 class="text-info">{{ activeAnnouncementsCount }}</h4>
+          <p class="card-text">Announcements</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <h4 class="text-warning">{{ currentUser?.department }}</h4>
+          <p class="card-text">Department</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Leaves -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5>Recent Leave Requests</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="recentLeaves.length === 0" class="text-center">
+            <p>No leave requests found</p>
+          </div>
+          <div *ngFor="let leave of recentLeaves" class="mb-3 p-2 border-bottom">
+            <div class="d-flex justify-content-between">
+              <div>
+                <strong>{{ leave.leaveType | titlecase }} Leave</strong><br>
+                <small>{{ formatDate(leave.startDate) }} - {{ formatDate(leave.endDate) }}</small>
+              </div>
+              <span [class]="getStatusBadgeClass(leave.status)">
+                {{ getStatusText(leave.status) }}
+              </span>
+            </div>
+            <p class="mb-0 mt-1">{{ leave.reason }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Documents -->
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h5>Recent Documents</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="recentDocuments.length === 0" class="text-center">
+            <p>No documents found</p>
+          </div>
+          <div *ngFor="let document of recentDocuments" class="mb-3 p-2 border-bottom">
+            <div class="d-flex justify-content-between">
+              <div>
+                <strong>{{ document.title }}</strong><br>
+                <small>{{ document.fileType.toUpperCase() }} • {{ (document.fileSize / 1024).toFixed(1) }} KB</small>
+              </div>
+              <small>{{ formatDate(document.uploadedDate) }}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Announcements -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5>Recent Announcements</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="recentAnnouncements.length === 0" class="text-center">
+            <p>No announcements found</p>
+          </div>
+          <div *ngFor="let announcement of recentAnnouncements" class="mb-3 p-2 border-bottom">
+            <h6>{{ announcement.title }}</h6>
+            <p>{{ announcement.content }}</p>
+            <div class="d-flex justify-content-between">
+              <span [class]="announcement.priority === 'high' ? 'badge bg-danger' : 
+                              announcement.priority === 'medium' ? 'badge bg-warning' : 'badge bg-success'">
+                {{ announcement.priority | titlecase }}
+              </span>
+              <small>{{ formatDate(announcement.createdDate) }}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

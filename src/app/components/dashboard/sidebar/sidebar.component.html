@@ -1,0 +1,96 @@
+<div class="sidebar" [class.collapsed]="isCollapsed">
+  <!-- Sidebar Header -->
+  <div class="sidebar-header">
+    <div class="d-flex align-items-center">
+      <i class="fas fa-deer text-primary me-2"></i>
+      <span class="sidebar-title" *ngIf="!isCollapsed">DEER Hub</span>
+    </div>
+    <button 
+      class="btn btn-link sidebar-toggle" 
+      (click)="toggleSidebar()"
+      title="Toggle Sidebar"
+    >
+      <i class="fas fa-bars"></i>
+    </button>
+  </div>
+
+  <!-- User Info -->
+  <div class="user-info" *ngIf="!isCollapsed">
+    <div class="user-avatar">
+      <i class="fas fa-user-circle fa-2x text-primary"></i>
+    </div>
+    <div class="user-details">
+      <h6 class="user-name mb-1">{{ currentUser?.firstName }} {{ currentUser?.lastName }}</h6>
+      <small class="user-role">{{ currentUser?.role | titlecase }}</small>
+      <small class="user-dept d-block">{{ currentUser?.department }}</small>
+    </div>
+  </div>
+
+  <!-- Navigation Menu -->
+  <nav class="sidebar-nav">
+    <ul class="nav flex-column">
+      <!-- Dashboard -->
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          <i class="fas fa-tachometer-alt me-2"></i>
+          <span *ngIf="!isCollapsed">Dashboard</span>
+        </a>
+      </li>
+
+      <!-- Leave Management -->
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/dashboard/leaves" routerLinkActive="active">
+          <i class="fas fa-calendar-alt me-2"></i>
+          <span *ngIf="!isCollapsed">Leave Management</span>
+        </a>
+      </li>
+
+      <!-- Documents -->
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/dashboard/documents" routerLinkActive="active">
+          <i class="fas fa-file-alt me-2"></i>
+          <span *ngIf="!isCollapsed">Documents</span>
+        </a>
+      </li>
+
+      <!-- Announcements -->
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/dashboard/announcements" routerLinkActive="active">
+          <i class="fas fa-bullhorn me-2"></i>
+          <span *ngIf="!isCollapsed">Announcements</span>
+        </a>
+      </li>
+
+      <!-- Manager Only Section -->
+      <ng-container *ngIf="isManager">
+        <li class="nav-item">
+          <hr class="sidebar-divider">
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/dashboard/employees" routerLinkActive="active">
+            <i class="fas fa-users me-2"></i>
+            <span *ngIf="!isCollapsed">Employee Management</span>
+          </a>
+        </li>
+      </ng-container>
+
+      <!-- Profile -->
+      <li class="nav-item">
+        <hr class="sidebar-divider">
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/dashboard/profile" routerLinkActive="active">
+          <i class="fas fa-user-cog me-2"></i>
+          <span *ngIf="!isCollapsed">Profile</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Sidebar Footer -->
+  <div class="sidebar-footer" *ngIf="!isCollapsed">
+    <button class="btn btn-outline-danger btn-sm w-100" (click)="logout()">
+      <i class="fas fa-sign-out-alt me-2"></i>Logout
+    </button>
+  </div>
+</div>

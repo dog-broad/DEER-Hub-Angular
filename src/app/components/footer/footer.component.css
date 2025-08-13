@@ -1,0 +1,11 @@
+/* Custom styles for footer component */
+footer a:hover {
+  color: #3498db !important;
+  text-decoration: none;
+}
+
+.social-links a:hover {
+  color: #3498db !important;
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}

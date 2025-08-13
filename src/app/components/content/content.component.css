@@ -1,0 +1,21 @@
+/* Content component styles */
+.avatar {
+  font-size: 1.2rem;
+}
+
+.feature-icon-wrapper {
+  transition: transform 0.3s ease;
+}
+
+.feature-icon-wrapper:hover {
+  transform: scale(1.1);
+}
+
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+}

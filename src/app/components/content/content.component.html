@@ -1,0 +1,44 @@
+<!-- Additional Features -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row text-center mb-5">
+      <div class="col-lg-8 mx-auto">
+        <h2 class="display-5 fw-bold mb-3">Built for Modern Workplaces</h2>
+        <p class="lead text-muted">
+          Our platform is designed with modern workplaces in mind, offering features that matter.
+        </p>
+      </div>
+    </div>
+    
+    <div class="row g-4">
+      <div class="col-lg-3 col-md-6" *ngFor="let feature of features">
+        <div class="text-center">
+          <div class="feature-icon-wrapper mb-3">
+            <i [class]="feature.icon" class="fa-2x text-primary"></i>
+          </div>
+          <h5 class="fw-bold mb-2">{{ feature.title }}</h5>
+          <p class="text-muted small">{{ feature.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-8">
+        <h2 class="fw-bold mb-3">Ready to Transform Your Workplace?</h2>
+        <p class="lead mb-0">
+          Join companies that trust DEER Hub for their employee management needs.
+        </p>
+      </div>
+      <div class="col-lg-4 text-lg-end">
+        <a routerLink="/login" class="btn btn-warning btn-lg px-4 py-3 fw-semibold">
+          <i class="fas fa-rocket me-2"></i>Get Started Today
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

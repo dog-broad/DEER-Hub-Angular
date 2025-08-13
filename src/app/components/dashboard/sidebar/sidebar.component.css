@@ -1,0 +1,130 @@
+/* Basic sidebar styles */
+.sidebar {
+  width: 280px;
+  height: 100vh;
+  background-color: #343a40;
+  color: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+}
+
+.sidebar.collapsed {
+  width: 70px;
+}
+
+/* Sidebar Header */
+.sidebar-header {
+  padding: 1rem;
+  border-bottom: 1px solid #495057;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar-title {
+  font-weight: bold;
+}
+
+.sidebar-toggle {
+  color: white;
+  border: none;
+  background: none;
+  padding: 0.25rem;
+}
+
+/* User Info */
+.user-info {
+  padding: 1rem;
+  border-bottom: 1px solid #495057;
+  text-align: center;
+}
+
+.user-avatar {
+  margin-bottom: 1rem;
+}
+
+.user-name {
+  color: white;
+  margin: 0;
+  font-weight: 600;
+}
+
+.user-role, 
+.user-dept {
+  color: #e2e7ec;
+  font-size: 0.8rem;
+}
+
+/* Navigation */
+.sidebar-nav {
+  flex: 1;
+  padding: 1rem 0;
+  overflow-y: auto;
+}
+
+.sidebar-nav .nav-item {
+  margin-bottom: 0.25rem;
+}
+
+.sidebar-nav .nav-link {
+  color: #adb5bd;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.sidebar-nav .nav-link:hover {
+  color: white;
+  background-color: #495057;
+}
+
+.sidebar-nav .nav-link.active {
+  color: white;
+  background-color: #007bff;
+}
+
+.sidebar-nav .nav-link i {
+  width: 20px;
+  text-align: center;
+  margin-right: 0.5rem;
+}
+
+/* Sidebar Divider */
+.sidebar-divider {
+  margin: 1rem;
+  border-color: #495057;
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid #495057;
+}
+
+/* Collapsed state adjustments */
+.sidebar.collapsed .sidebar-nav .nav-link {
+  padding: 0.75rem;
+  justify-content: center;
+}
+
+.sidebar.collapsed .sidebar-nav .nav-link i {
+  margin: 0;
+}
+
+.sidebar.collapsed .sidebar-divider {
+  margin: 1rem 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  
+  .sidebar.show {
+    transform: translateX(0);
+  }
+}

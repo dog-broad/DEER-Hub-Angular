@@ -1,0 +1,24 @@
+<div class="container py-5">
+  <div class="row text-center mb-5">
+    <div class="col-lg-8 mx-auto">
+      <h1 class="display-4 fw-bold mb-3">Our Features</h1>
+      <p class="lead text-muted">
+        Discover what makes DEER Hub the perfect solution for your workplace management needs.
+      </p>
+    </div>
+  </div>
+  
+  <div class="row g-4">
+    <div class="col-lg-6 col-md-6" *ngFor="let feature of features">
+      <div class="card h-100 border-0 shadow-sm hover-lift">
+        <div class="card-body text-center p-4">
+          <div class="feature-icon mb-3">
+            <i [class]="feature.icon" class="fa-3x text-primary"></i>
+          </div>
+          <h5 class="card-title fw-bold mb-3">{{ feature.title }}</h5>
+          <p class="card-text text-muted">{{ feature.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
