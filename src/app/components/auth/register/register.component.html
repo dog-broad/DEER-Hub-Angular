@@ -1,216 +1,130 @@
-<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light py-5">
-  <div class="row w-100 justify-content-center">
-    <div class="col-12 col-sm-10 col-md-8 col-lg-6">
-      <div class="card shadow-lg border-0">
-        <div class="card-body p-5">
-          <!-- Title -->
-          <div class="text-center mb-4">
-            <h2 class="fw-bold text-dark mb-2">Create Account</h2>
-            <p class="text-muted">Join DEER Hub and streamline your workplace operations</p>
-          </div>
-
-          <!-- Registration Form -->
-          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+<div class="container d-flex justify-content-center align-items-center mt-5">
+    <div class="card shadow-sm p-3 mb-5 bg-body rounded" style="width: 40rem;">
+        <h1 class="text-center">Register</h1>
+        <h5 class="text-body-secondary text-center">Create your DEER Hub account</h5>
+        <form [formGroup]="myForm" class="p-3">
             <div class="row">
-              <!-- First Name -->
-              <div class="col-md-6 mb-3">
-                <label for="firstName" class="form-label fw-semibold">First Name *</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="firstName"
-                  formControlName="firstName"
-                  placeholder="Enter first name"
-                  [class.is-invalid]="firstName?.invalid && firstName?.touched"
-                >
-                <div *ngIf="firstName?.invalid && firstName?.touched" class="invalid-feedback d-block">
-                  <div *ngIf="firstName?.errors?.['required']">First name is required.</div>
-                  <div *ngIf="firstName?.errors?.['minlength']">First name must be at least 2 characters.</div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" formControlName="firstName" class="form-control">
+                        <div *ngIf="myFc?.['firstName']?.touched && myFc?.['firstName']?.invalid">
+                            <div *ngIf="myForm.get('firstName')?.errors?.['required']" class="alert alert-danger p-1 mt-1 small">
+                                First name is required
+                            </div>
+                            <div *ngIf="myForm.get('firstName')?.errors?.['minlength']" class="alert alert-danger p-1 mt-1 small">
+                                First name must be at least 2 characters
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-
-              <!-- Last Name -->
-              <div class="col-md-6 mb-3">
-                <label for="lastName" class="form-label fw-semibold">Last Name *</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="lastName"
-                  formControlName="lastName"
-                  placeholder="Enter last name"
-                  [class.is-invalid]="lastName?.invalid && lastName?.touched"
-                >
-                <div *ngIf="lastName?.invalid && lastName?.touched" class="invalid-feedback d-block">
-                  <div *ngIf="lastName?.errors?.['required']">Last name is required.</div>
-                  <div *ngIf="lastName?.errors?.['minlength']">Last name must be at least 2 characters.</div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" formControlName="lastName" class="form-control">
+                        <div *ngIf="myFc?.['lastName']?.touched && myFc?.['lastName']?.invalid">
+                            <div *ngIf="myForm.get('lastName')?.errors?.['required']" class="alert alert-danger p-1 mt-1 small">
+                                Last name is required
+                            </div>
+                            <div *ngIf="myForm.get('lastName')?.errors?.['minlength']" class="alert alert-danger p-1 mt-1 small">
+                                Last name must be at least 2 characters
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-
-            <!-- Username -->
-            <div class="mb-3">
-              <label for="username" class="form-label fw-semibold">Username *</label>
-              <div class="input-group">
-                <span class="input-group-text bg-light border-end-0">
-                  <i class="fas fa-user text-muted"></i>
-                </span>
-                <input
-                  type="text"
-                  class="form-control border-start-0"
-                  id="username"
-                  formControlName="username"
-                  placeholder="Choose a username"
-                  [class.is-invalid]="username?.invalid && username?.touched"
-                >
-              </div>
-              <div *ngIf="username?.invalid && username?.touched" class="invalid-feedback d-block">
-                <div *ngIf="username?.errors?.['required']">Username is required.</div>
-                <div *ngIf="username?.errors?.['minlength']">Username must be at least 3 characters.</div>
-                <div *ngIf="username?.errors?.['pattern']">Username can only contain letters, numbers, dots, and underscores.</div>
-              </div>
+            <div class="form-group mb-3">
+                <label for="username">Username</label>
+                <input type="text" id="username" formControlName="username" class="form-control">
+                <div *ngIf="myFc?.['username']?.touched && myFc?.['username']?.invalid">
+                    <div *ngIf="myForm.get('username')?.errors?.['required']" class="alert alert-danger p-1 mt-1 small">
+                        Username is required
+                    </div>
+                    <div *ngIf="myForm.get('username')?.errors?.['minlength']" class="alert alert-danger p-1 mt-1 small">
+                        Username must be at least 3 characters
+                    </div>
+                    <div *ngIf="myForm.get('username')?.errors?.['pattern']" class="alert alert-danger p-1 mt-1 small">
+                        Username can only contain letters, numbers, dots, and underscores
+                    </div>
+                </div>
             </div>
-
-            <!-- Email -->
-            <div class="mb-3">
-              <label for="email" class="form-label fw-semibold">Email *</label>
-              <div class="input-group">
-                <span class="input-group-text bg-light border-end-0">
-                  <i class="fas fa-envelope text-muted"></i>
-                </span>
-                <input
-                  type="email"
-                  class="form-control border-start-0"
-                  id="email"
-                  formControlName="email"
-                  placeholder="Enter your email"
-                  [class.is-invalid]="email?.invalid && email?.touched"
-                >
-              </div>
-              <div *ngIf="email?.invalid && email?.touched" class="invalid-feedback d-block">
-                <div *ngIf="email?.errors?.['required']">Email is required.</div>
-                <div *ngIf="email?.errors?.['email']">Please enter a valid email address.</div>
-              </div>
+            <div class="form-group mb-3">
+                <label for="email">Email</label>
+                <input type="email" id="email" formControlName="email" class="form-control">
+                <div *ngIf="myFc?.['email']?.touched && myFc?.['email']?.invalid">
+                    <div *ngIf="myForm.get('email')?.errors?.['required']" class="alert alert-danger p-1 mt-1 small">
+                        Email is required
+                    </div>
+                    <div *ngIf="myForm.get('email')?.errors?.['email']" class="alert alert-danger p-1 mt-1 small">
+                        Invalid email format
+                    </div>
+                </div>
             </div>
-
             <div class="row">
-              <!-- Password -->
-              <div class="col-md-6 mb-3">
-                <label for="password" class="form-label fw-semibold">Password *</label>
-                <div class="input-group">
-                  <span class="input-group-text bg-light border-end-0">
-                    <i class="fas fa-lock text-muted"></i>
-                  </span>
-                  <input
-                    type="password"
-                    class="form-control border-start-0"
-                    id="password"
-                    formControlName="password"
-                    placeholder="Enter password"
-                    [class.is-invalid]="password?.invalid && password?.touched"
-                  >
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" formControlName="password" class="form-control">
+                        <div *ngIf="myFc?.['password']?.touched && myFc?.['password']?.invalid">
+                            <div *ngIf="myForm.get('password')?.errors?.['required']" class="alert alert-danger p-1 mt-1 small">
+                                Password is required
+                            </div>
+                            <div *ngIf="myForm.get('password')?.errors?.['minlength']" class="alert alert-danger p-1 mt-1 small">
+                                Password must be at least 6 characters
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <small class="text-muted">Minimum 6 characters</small>
-                <div *ngIf="password?.invalid && password?.touched" class="invalid-feedback d-block">
-                  <div *ngIf="password?.errors?.['required']">Password is required.</div>
-                  <div *ngIf="password?.errors?.['minlength']">Password must be at least 6 characters.</div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" formControlName="confirmPassword" class="form-control">
+                        <div *ngIf="myFc?.['confirmPassword']?.touched && myFc?.['confirmPassword']?.invalid">
+                            <div *ngIf="myForm.get('confirmPassword')?.errors?.['required']" class="alert alert-danger p-1 mt-1 small">
+                                Confirm password is required
+                            </div>
+                        </div>
+                        <div *ngIf="myForm.errors?.['passwordMismatch'] && myFc?.['confirmPassword']?.touched" class="alert alert-danger p-1 mt-1 small">
+                            Passwords do not match
+                        </div>
+                    </div>
                 </div>
-              </div>
-
-              <!-- Confirm Password -->
-              <div class="col-md-6 mb-3">
-                <label for="confirmPassword" class="form-label fw-semibold">Confirm Password *</label>
-                <div class="input-group">
-                  <span class="input-group-text bg-light border-end-0">
-                    <i class="fas fa-lock text-muted"></i>
-                  </span>
-                  <input
-                    type="password"
-                    class="form-control border-start-0"
-                    id="confirmPassword"
-                    formControlName="confirmPassword"
-                    placeholder="Confirm password"
-                    [class.is-invalid]="(confirmPassword?.invalid && confirmPassword?.touched) || registerForm.errors?.['passwordMismatch']"
-                  >
-                </div>
-                <div *ngIf="(confirmPassword?.invalid && confirmPassword?.touched) || registerForm.errors?.['passwordMismatch']" class="invalid-feedback d-block">
-                  <div *ngIf="confirmPassword?.errors?.['required']">Please confirm your password.</div>
-                  <div *ngIf="registerForm.errors?.['passwordMismatch']">Passwords do not match.</div>
-                </div>
-              </div>
             </div>
-
             <div class="row">
-              <!-- Department -->
-              <div class="col-md-6 mb-3">
-                <label for="department" class="form-label fw-semibold">Department *</label>
-                <select
-                  class="form-select"
-                  id="department"
-                  formControlName="department"
-                  [class.is-invalid]="department?.invalid && department?.touched"
-                >
-                  <option value="">Select Department</option>
-                  <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
-                </select>
-                <div *ngIf="department?.invalid && department?.touched" class="invalid-feedback d-block">
-                  <div *ngIf="department?.errors?.['required']">Please select a department.</div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="department">Department</label>
+                        <select id="department" formControlName="department" class="form-control">
+                            <option value="">Select Department</option>
+                            <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+                        </select>
+                        <div *ngIf="myFc?.['department']?.touched && myFc?.['department']?.invalid">
+                            <div *ngIf="myForm.get('department')?.errors?.['required']" class="alert alert-danger p-1 mt-1 small">
+                                Department is required
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-
-              <!-- Role -->
-              <div class="col-md-6 mb-3">
-                <label for="role" class="form-label fw-semibold">Role *</label>
-                <select
-                  class="form-select"
-                  id="role"
-                  formControlName="role"
-                  [class.is-invalid]="role?.invalid && role?.touched"
-                >
-                  <option *ngFor="let role of roles" [value]="role.value">{{ role.label }}</option>
-                </select>
-                <div *ngIf="role?.invalid && role?.touched" class="invalid-feedback d-block">
-                  <div *ngIf="role?.errors?.['required']">Please select a role.</div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="role">Role</label>
+                        <select id="role" formControlName="role" class="form-control">
+                            <option *ngFor="let role of roles" [value]="role.value">{{ role.label }}</option>
+                        </select>
+                        <div *ngIf="myFc?.['role']?.touched && myFc?.['role']?.invalid">
+                            <div *ngIf="myForm.get('role')?.errors?.['required']" class="alert alert-danger p-1 mt-1 small">
+                                Role is required
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-
-            <!-- Error Message -->
-            <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
-              <i class="fas fa-exclamation-triangle me-2"></i>
-              {{ errorMessage }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <div class="d-flex justify-content-center">
+                <button class="btn btn-primary" (click)="validate()" [disabled]="myForm.invalid">Register</button>
             </div>
-
-            <!-- Success Message -->
-            <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show mb-3" role="alert">
-              <i class="fas fa-check-circle me-2"></i>
-              {{ successMessage }}
-              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <div class="d-flex justify-content-center mt-3">
+                <span>Already have an account? <a routerLink="/login">Login</a></span>
             </div>
-
-            <!-- Submit Button -->
-            <div class="d-grid mb-3">
-              <button
-                type="submit"
-                class="btn btn-primary btn-lg"
-                [disabled]="isLoading || registerForm.invalid"
-              >
-                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
-                <i *ngIf="!isLoading" class="fas fa-user-plus me-2"></i>
-                {{ isLoading ? 'Creating Account...' : 'Create Account' }}
-              </button>
-            </div>
-
-            <!-- Links -->
-            <div class="text-center">
-              <p class="text-muted mb-0">
-                Already have an account? 
-                <a routerLink="/login" class="text-decoration-none fw-semibold">Sign In</a>
-              </p>
-            </div>
-          </form>
-        </div>
-      </div>
+        </form>
     </div>
-  </div>
 </div>

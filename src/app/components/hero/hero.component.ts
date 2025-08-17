@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-hero',
@@ -10,6 +12,13 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./hero.component.css']
 })
 export class HeroComponent {
+  currentUser: User | null = null;
+
+  constructor(public authService: AuthService) {
+    this.currentUser = this.authService.getCurrentUser();
+    console.log(this.currentUser);
+  }
+
   features = [
     {
       icon: 'fas fa-calendar-alt',

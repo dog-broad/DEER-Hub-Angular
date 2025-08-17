@@ -1,59 +1,85 @@
-# DEERHub
+# DEER Hub Angular Application
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.15.
+A comprehensive employee management system built with Angular and JSON Server.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- **User Authentication**: Login and registration system
+- **Dashboard**: Overview of leaves, documents, and announcements
+- **Leave Management**: Apply, approve, and track leave requests
+- **Document Management**: Upload, organize, and share documents
+- **Announcements**: Create and manage company announcements and events
+- **Role-based Access**: Different views for managers and employees
 
+## Prerequisites
+
+- Node.js (v16 or higher)
+- npm (v8 or higher)
+
+## Installation
+
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+## Running the Application
+
+### 1. Start JSON Server (Database)
 ```bash
-ng serve
+npm run json-server
 ```
+This will start the JSON Server on `http://localhost:3001` with the database file `public/db.json`.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
+### 2. Start Angular Development Server
 ```bash
-ng generate component component-name
+npm start
 ```
+This will start the Angular application on `http://localhost:4200`.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Database Structure
 
-```bash
-ng generate --help
-```
+The application uses JSON Server as a mock REST API with the following endpoints:
 
-## Building
+- **Users**: `http://localhost:3000/users`
+- **Leaves**: `http://localhost:3000/leaves`
+- **Documents**: `http://localhost:3000/documents`
+- **Announcements**: `http://localhost:3000/announcements`
 
-To build the project run:
+## Default Users
 
-```bash
-ng build
-```
+The application comes with pre-configured users:
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+1. **Manager Account**:
+   - Username: `priya.sharma`
+   - Password: `password123`
+   - Role: Manager
 
-## Running unit tests
+2. **Employee Accounts**:
+   - Username: `rahul.kumar` / Password: `password123`
+   - Username: `amit.patel` / Password: `password123`
+   - Role: Employee
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## Architecture
 
-```bash
-ng test
-```
+- **Services**: All services use HTTP calls to JSON Server instead of in-memory data
+- **Observables**: Proper Observable patterns for reactive data flow
+- **Reactive Forms**: Consistent form patterns across all components using `myForm` and `myFc` getter
+- **Simplified Components**: Clean, straightforward component implementations without over-engineering
+- **Type Safety**: Full TypeScript support with proper interfaces
 
-## Running end-to-end tests
+## Available Scripts
 
-For end-to-end (e2e) testing, run:
+- `npm start` - Start Angular development server
+- `npm run build` - Build the application for production
+- `npm run json-server` - Start JSON Server for the database
+- `npm test` - Run unit tests
 
-```bash
-ng e2e
-```
+## Technology Stack
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **Frontend**: Angular 19
+- **Database**: JSON Server (mock REST API)
+- **Styling**: Bootstrap 5
+- **Icons**: Font Awesome
+- **HTTP Client**: Angular HttpClient with Observables

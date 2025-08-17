@@ -1,126 +1,113 @@
-<div class="container">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>{{ isEditMode ? 'Edit' : 'Add New' }} Announcement</h2>
-    <a routerLink="/dashboard/announcements" class="btn btn-outline-secondary">
-      <i class="fas fa-arrow-left me-2"></i>Back to List
-    </a>
-  </div>
-
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card">
-        <div class="card-body">
-          <form [formGroup]="announcementForm" (ngSubmit)="onSubmit()">
-            <!-- Type Selection -->
-            <div class="mb-3">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="isEvent" formControlName="isEvent" (change)="onIsEventChange()">
-                <label class="form-check-label" for="isEvent">
-                  This is an event (with date, time, and location)
-                </label>
-              </div>
-            </div>
-
-            <!-- Title -->
-            <div class="mb-3">
-              <label for="title" class="form-label">Title *</label>
-              <input type="text" class="form-control" id="title" formControlName="title" 
-                     [class.is-invalid]="announcementForm.get('title')?.invalid && announcementForm.get('title')?.touched">
-              <div class="invalid-feedback" *ngIf="announcementForm.get('title')?.invalid && announcementForm.get('title')?.touched">
-                <div *ngIf="announcementForm.get('title')?.errors?.['required']">Title is required.</div>
-                <div *ngIf="announcementForm.get('title')?.errors?.['minlength']">Title must be at least 3 characters.</div>
-              </div>
-            </div>
-
-            <!-- Content -->
-            <div class="mb-3">
-              <label for="content" class="form-label">Content *</label>
-              <textarea class="form-control" id="content" rows="4" formControlName="content"
-                        [class.is-invalid]="announcementForm.get('content')?.invalid && announcementForm.get('content')?.touched"></textarea>
-              <div class="invalid-feedback" *ngIf="announcementForm.get('content')?.invalid && announcementForm.get('content')?.touched">
-                <div *ngIf="announcementForm.get('content')?.errors?.['required']">Content is required.</div>
-                <div *ngIf="announcementForm.get('content')?.errors?.['minlength']">Content must be at least 10 characters.</div>
-              </div>
-            </div>
-
-            <!-- Priority -->
-            <div class="mb-3">
-              <label for="priority" class="form-label">Priority *</label>
-              <select class="form-select" id="priority" formControlName="priority">
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-              </select>
-            </div>
-
-            <!-- Target Audience -->
-            <div class="mb-3">
-              <label for="targetAudience" class="form-label">Target Audience *</label>
-              <select class="form-select" id="targetAudience" formControlName="targetAudience">
-                <option value="all">All Employees</option>
-                <option value="employees">Employees Only</option>
-                <option value="managers">Managers Only</option>
-              </select>
-            </div>
-
-            <!-- Event-specific fields (shown only when isEvent is true) -->
-            <div *ngIf="announcementForm.get('isEvent')?.value">
-              <hr class="my-4">
-              <h5>Event Details</h5>
-
-              <!-- Event Date -->
-              <div class="mb-3">
-                <label for="eventDate" class="form-label">Event Date *</label>
-                <input type="date" class="form-control" id="eventDate" formControlName="eventDate"
-                       [class.is-invalid]="announcementForm.get('eventDate')?.invalid && announcementForm.get('eventDate')?.touched">
-                <div class="invalid-feedback" *ngIf="announcementForm.get('eventDate')?.invalid && announcementForm.get('eventDate')?.touched">
-                  Event date is required.
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h4 class="mb-0">Create Announcement</h4>
                 </div>
-              </div>
-
-              <!-- Time Range -->
-              <div class="row">
-                <div class="col-md-6">
-                  <label for="startTime" class="form-label">Start Time *</label>
-                  <input type="time" class="form-control" id="startTime" formControlName="startTime"
-                         [class.is-invalid]="announcementForm.get('startTime')?.invalid && announcementForm.get('startTime')?.touched">
-                  <div class="invalid-feedback" *ngIf="announcementForm.get('startTime')?.invalid && announcementForm.get('startTime')?.touched">
-                    Start time is required.
-                  </div>
+                <div class="card-body">
+                    <form [formGroup]="myForm">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group mb-3">
+                                    <label for="title">Title</label>
+                                    <input type="text" id="title" formControlName="title" class="form-control" placeholder="Enter announcement title">
+                                    <div *ngIf="myFc?.['title']?.touched && myFc?.['title']?.invalid">
+                                        <div *ngIf="myForm.get('title')?.errors?.['required']" class="alert alert-danger p-1 mt-1 small">
+                                            Title is required
+                                        </div>
+                                        <div *ngIf="myForm.get('title')?.errors?.['minlength']" class="alert alert-danger p-1 mt-1 small">
+                                            Title must be at least 5 characters
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group mb-3">
+                                    <label for="priority">Priority</label>
+                                    <select id="priority" formControlName="priority" class="form-control">
+                                        <option *ngFor="let priority of priorities" [value]="priority.value">{{ priority.label }}</option>
+                                    </select>
+                                    <div *ngIf="myFc?.['priority']?.touched && myFc?.['priority']?.invalid">
+                                        <div *ngIf="myForm.get('priority')?.errors?.['required']" class="alert alert-danger p-1 mt-1 small">
+                                            Priority is required
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="content">Content</label>
+                            <textarea id="content" formControlName="content" class="form-control" rows="6" placeholder="Enter announcement content"></textarea>
+                            <div *ngIf="myFc?.['content']?.touched && myFc?.['content']?.invalid">
+                                <div *ngIf="myForm.get('content')?.errors?.['required']" class="alert alert-danger p-1 mt-1 small">
+                                    Content is required
+                                </div>
+                                <div *ngIf="myForm.get('content')?.errors?.['minlength']" class="alert alert-danger p-1 mt-1 small">
+                                    Content must be at least 10 characters
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="targetAudience">Target Audience</label>
+                                    <select id="targetAudience" formControlName="targetAudience" class="form-control">
+                                        <option *ngFor="let audience of targetAudiences" [value]="audience.value">{{ audience.label }}</option>
+                                    </select>
+                                    <div *ngIf="myFc?.['targetAudience']?.touched && myFc?.['targetAudience']?.invalid">
+                                        <div *ngIf="myForm.get('targetAudience')?.errors?.['required']" class="alert alert-danger p-1 mt-1 small">
+                                            Target audience is required
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="isEvent" formControlName="isEvent">
+                                        <label class="form-check-label" for="isEvent">
+                                            This is an event
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="myForm.get('isEvent')?.value" class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="eventDate">Event Date</label>
+                                    <input type="date" id="eventDate" formControlName="eventDate" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="location">Location</label>
+                                    <input type="text" id="location" formControlName="location" class="form-control" placeholder="Enter event location">
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="myForm.get('isEvent')?.value" class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="startTime">Start Time</label>
+                                    <input type="time" id="startTime" formControlName="startTime" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="endTime">End Time</label>
+                                    <input type="time" id="endTime" formControlName="endTime" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <a routerLink="/dashboard/announcements" class="btn btn-secondary">Cancel</a>
+                            <button type="button" class="btn btn-primary" (click)="validate()" [disabled]="myForm.invalid">Create Announcement</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="col-md-6">
-                  <label for="endTime" class="form-label">End Time *</label>
-                  <input type="time" class="form-control" id="endTime" formControlName="endTime"
-                         [class.is-invalid]="announcementForm.get('endTime')?.invalid && announcementForm.get('endTime')?.touched">
-                  <div class="invalid-feedback" *ngIf="announcementForm.get('endTime')?.invalid && announcementForm.get('endTime')?.touched">
-                    End time is required.
-                  </div>
-                </div>
-              </div>
-
-              <!-- Location -->
-              <div class="mb-3">
-                <label for="location" class="form-label">Location *</label>
-                <input type="text" class="form-control" id="location" formControlName="location"
-                       [class.is-invalid]="announcementForm.get('location')?.invalid && announcementForm.get('location')?.touched">
-                <div class="invalid-feedback" *ngIf="announcementForm.get('location')?.invalid && announcementForm.get('location')?.touched">
-                  Location is required.
-                </div>
-              </div>
             </div>
-
-            <!-- Form Actions -->
-            <div class="d-flex justify-content-end gap-2 mt-4">
-              <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">
-                Cancel
-              </button>
-              <button type="submit" class="btn btn-primary" [disabled]="announcementForm.invalid">
-                {{ isEditMode ? 'Update' : 'Create' }} {{ announcementForm.get('isEvent')?.value ? 'Event' : 'Announcement' }}
-              </button>
-            </div>
-          </form>
         </div>
-      </div>
     </div>
-  </div>
 </div>

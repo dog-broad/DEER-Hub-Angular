@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { AnnouncementService } from '../../../services/announcement.service';
 import { Announcement } from '../../../models/announcement.model';
+import { UserRole } from '../../../models/user.model';
 
 @Component({
   selector: 'app-announcements',
@@ -26,21 +27,23 @@ export class AnnouncementsComponent {
   }
 
   loadAnnouncements(): void {
-    const allAnnouncements = this.announcementService.getActiveAnnouncements();
-    
-    // Filter announcements (non-events)
-    this.announcements = allAnnouncements.filter(announcement => !announcement.isEvent);
-    
-    // Filter events
-    this.events = allAnnouncements.filter(announcement => announcement.isEvent);
+    this.announcementService.getActiveAnnouncements().subscribe({
+      next: (allAnnouncements) => {
+        // Filter announcements (non-events)
+        this.announcements = allAnnouncements.filter(announcement => !announcement.isEvent);
+        
+        // Filter events
+        this.events = allAnnouncements.filter(announcement => announcement.isEvent);
+      }
+    });
   }
 
   get isManager(): boolean {
-    return this.authService.isManager();
+    return this.currentUser?.role === UserRole.MANAGER;
   }
 
   get isEmployee(): boolean {
-    return this.authService.isEmployee();
+    return this.currentUser?.role === UserRole.EMPLOYEE;
   }
 
   formatDate(date: Date): string {
@@ -61,8 +64,13 @@ export class AnnouncementsComponent {
 
   deleteAnnouncement(id: number): void {
     if (confirm('Are you sure you want to delete this announcement?')) {
-      this.announcementService.deleteAnnouncement(id);
-      this.loadAnnouncements();
+      this.announcementService.deleteAnnouncement(id).subscribe({
+        next: (success) => {
+          if (success) {
+            this.loadAnnouncements();
+          }
+        }
+      });
     }
   }
 

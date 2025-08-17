@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { DocumentService } from '../../../services/document.service';
 import { Document } from '../../../models/document.model';
+import { UserRole } from '../../../models/user.model';
 
 @Component({
   selector: 'app-documents',
@@ -28,15 +29,26 @@ export class DocumentsComponent {
   }
 
   loadDocuments(): void {
-    if (this.authService.isManager()) {
-      this.documents = this.documentService.getAllDocuments();
+    if (this.currentUser?.role === UserRole.MANAGER) {
+      this.documentService.getAllDocuments().subscribe({
+        next: (docs) => {
+          this.documents = docs;
+          this.applyFilters();
+        }
+      });
     } else {
       // Employees see public documents and their own documents
-      const publicDocs = this.documentService.getPublicDocuments();
-      const userDocs = this.documentService.getDocumentsByUser(this.currentUser.id);
-      this.documents = [...publicDocs, ...userDocs.filter(doc => !doc.isPublic)];
+      this.documentService.getPublicDocuments().subscribe({
+        next: (publicDocs) => {
+          this.documentService.getDocumentsByUser(this.currentUser.id).subscribe({
+            next: (userDocs) => {
+              this.documents = [...publicDocs, ...userDocs.filter(doc => !doc.isPublic)];
+              this.applyFilters();
+            }
+          });
+        }
+      });
     }
-    this.applyFilters();
   }
 
   applyFilters(): void {
@@ -55,8 +67,13 @@ export class DocumentsComponent {
 
   deleteDocument(documentId: number): void {
     if (confirm('Are you sure you want to delete this document?')) {
-      this.documentService.deleteDocument(documentId);
-      this.loadDocuments();
+      this.documentService.deleteDocument(documentId).subscribe({
+        next: (success) => {
+          if (success) {
+            this.loadDocuments();
+          }
+        }
+      });
     }
   }
 
@@ -66,11 +83,11 @@ export class DocumentsComponent {
   }
 
   get isManager(): boolean {
-    return this.authService.isManager();
+    return this.currentUser?.role === UserRole.MANAGER;
   }
 
   get isEmployee(): boolean {
-    return this.authService.isEmployee();
+    return this.currentUser?.role === UserRole.EMPLOYEE;
   }
 
   formatDate(date: Date): string {
@@ -80,8 +97,6 @@ export class DocumentsComponent {
       year: 'numeric'
     });
   }
-
-
 
   canEdit(document: Document): boolean {
     return this.isManager || document.uploadedBy === this.currentUser.id;
@@ -96,7 +111,14 @@ export class DocumentsComponent {
   }
 
   getUploaderName(uploadedBy: number): string {
-    const user = this.authService.getUserById(uploadedBy);
-    return user ? `${user.firstName} ${user.lastName}` : 'Unknown';
+    this.authService.getUserById(uploadedBy).subscribe({
+      next: (user) => {
+        if (user) {
+          return `${user.firstName} ${user.lastName}`;
+        }
+        return 'Unknown';
+      }
+    });
+    return 'Loading...';
   }
 }

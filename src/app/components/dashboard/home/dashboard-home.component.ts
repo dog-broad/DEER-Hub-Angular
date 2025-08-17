@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
 import { LeaveService } from '../../../services/leave.service';
@@ -7,6 +7,7 @@ import { AnnouncementService } from '../../../services/announcement.service';
 import { Leave, LeaveStatus } from '../../../models/leave.model';
 import { Document } from '../../../models/document.model';
 import { Announcement } from '../../../models/announcement.model';
+import { UserRole } from '../../../models/user.model';
 
 @Component({
   selector: 'app-dashboard-home',
@@ -15,7 +16,7 @@ import { Announcement } from '../../../models/announcement.model';
   templateUrl: './dashboard-home.component.html',
   styleUrls: ['./dashboard-home.component.css']
 })
-export class DashboardHomeComponent implements OnInit {
+export class DashboardHomeComponent {
   currentUser: any;
   recentLeaves: Leave[] = [];
   recentDocuments: Document[] = [];
@@ -33,74 +34,76 @@ export class DashboardHomeComponent implements OnInit {
     private announcementService: AnnouncementService
   ) {
     this.currentUser = this.authService.getCurrentUser();
-  }
-
-  ngOnInit(): void {
     this.loadDashboardData();
   }
 
-  private loadDashboardData(): void {
+  loadDashboardData(): void {
     if (this.currentUser) {
-      // Load user's recent leaves
-      const leaves = this.leaveService.getLeavesByUser(this.currentUser.id);
-      this.recentLeaves = leaves.slice(0, 5); // Get last 5 leaves
-      this.pendingLeavesCount = leaves.filter(leave => leave.status === LeaveStatus.PENDING).length;
+      this.leaveService.getLeavesByUser(this.currentUser.id).subscribe({
+        next: (leaves) => {
+          console.log(leaves);
+          this.recentLeaves = leaves.slice(0, 5);
+          this.pendingLeavesCount = leaves.filter(leave => leave.status === LeaveStatus.PENDING).length;
+        }
+      });
 
-      // Load recent documents
-      if (this.authService.isManager()) {
-        const documents = this.documentService.getAllDocuments();
-        this.recentDocuments = documents.slice(0, 5);
-        this.totalDocumentsCount = documents.length;
+      if (this.currentUser?.role === UserRole.MANAGER) {
+        this.documentService.getAllDocuments().subscribe({
+          next: (documents) => {
+            this.recentDocuments = documents.slice(0, 5);
+            this.totalDocumentsCount = documents.length;
+          }
+        });
       } else {
-        const documents = this.documentService.getPublicDocuments();
-        this.recentDocuments = documents.slice(0, 5);
-        this.totalDocumentsCount = documents.length;
+        this.documentService.getPublicDocuments().subscribe({
+          next: (documents) => {
+            this.recentDocuments = documents.slice(0, 5);
+            this.totalDocumentsCount = documents.length;
+          }
+        });
       }
 
-      // Load recent announcements (non-events)
-      const allAnnouncements = this.announcementService.getActiveAnnouncements();
-      this.recentAnnouncements = allAnnouncements
-        .filter(announcement => !announcement.isEvent)
-        .slice(0, 4);
-      this.activeAnnouncementsCount = allAnnouncements.filter(announcement => !announcement.isEvent).length;
+      this.announcementService.getActiveAnnouncements().subscribe({
+        next: (allAnnouncements) => {
+          this.recentAnnouncements = allAnnouncements
+            .filter(announcement => !announcement.isEvent)
+            .slice(0, 4);
+          this.activeAnnouncementsCount = allAnnouncements.filter(announcement => !announcement.isEvent).length;
+        }
+      });
 
-      // Load recent events
-      this.recentEvents = this.announcementService.getUpcomingEvents().slice(0, 4);
-      this.upcomingEventsCount = this.announcementService.getUpcomingEvents().length;
+      this.announcementService.getUpcomingEvents().subscribe({
+        next: (events) => {
+          this.recentEvents = events.slice(0, 4);
+          this.upcomingEventsCount = events.length;
+        }
+      });
     }
   }
 
   get isManager(): boolean {
-    return this.authService.isManager();
+    return this.currentUser?.role === UserRole.MANAGER;
   }
 
   get isEmployee(): boolean {
-    return this.authService.isEmployee();
+    return this.currentUser?.role === UserRole.EMPLOYEE;
   }
 
   getStatusBadgeClass(status: LeaveStatus): string {
     switch (status) {
-      case LeaveStatus.APPROVED:
-        return 'badge bg-success';
-      case LeaveStatus.REJECTED:
-        return 'badge bg-danger';
-      case LeaveStatus.PENDING:
-        return 'badge bg-warning';
-      default:
-        return 'badge bg-secondary';
+      case LeaveStatus.APPROVED: return 'badge bg-success';
+      case LeaveStatus.REJECTED: return 'badge bg-danger';
+      case LeaveStatus.PENDING: return 'badge bg-warning';
+      default: return 'badge bg-secondary';
     }
   }
 
   getStatusText(status: LeaveStatus): string {
     switch (status) {
-      case LeaveStatus.APPROVED:
-        return 'Approved';
-      case LeaveStatus.REJECTED:
-        return 'Rejected';
-      case LeaveStatus.PENDING:
-        return 'Pending';
-      default:
-        return 'Unknown';
+      case LeaveStatus.APPROVED: return 'Approved';
+      case LeaveStatus.REJECTED: return 'Rejected';
+      case LeaveStatus.PENDING: return 'Pending';
+      default: return 'Unknown';
     }
   }
 

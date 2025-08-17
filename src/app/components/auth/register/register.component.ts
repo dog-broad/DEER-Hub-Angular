@@ -1,50 +1,40 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 import { UserRole } from '../../../models/user.model';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent implements OnInit {
-  registerForm!: FormGroup;
+export class RegisterComponent {
+  myForm: FormGroup;
   departments = ['IT', 'HR', 'Marketing', 'Finance', 'Operations', 'Sales'];
   roles = [
     { value: UserRole.EMPLOYEE, label: 'Employee' },
     { value: UserRole.MANAGER, label: 'Manager' }
   ];
 
-  errorMessage = '';
-  successMessage = '';
-  isLoading = false;
-
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router
-  ) {}
-
-  ngOnInit(): void {
-    this.initForm();
+  constructor(private authService: AuthService, private router: Router) {
+    this.myForm = new FormGroup({
+      firstName: new FormControl('', [Validators.required, Validators.minLength(2)]),
+      lastName: new FormControl('', [Validators.required, Validators.minLength(2)]),
+      username: new FormControl('', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9._]+$/)]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+      confirmPassword: new FormControl('', [Validators.required]),
+      department: new FormControl('', [Validators.required]),
+      role: new FormControl(UserRole.EMPLOYEE, [Validators.required])
+    }, { validators: this.passwordMatchValidator });
   }
 
-  private initForm(): void {
-    this.registerForm = this.fb.group({
-      firstName: ['', [Validators.required, Validators.minLength(2)]],
-      lastName: ['', [Validators.required, Validators.minLength(2)]],
-      username: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9._]+$/)]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required]],
-      department: ['', [Validators.required]],
-      role: [UserRole.EMPLOYEE, [Validators.required]]
-    }, { validators: this.passwordMatchValidator });
+  get myFc() {
+    return this.myForm.controls;
   }
 
   private passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
@@ -58,13 +48,9 @@ export class RegisterComponent implements OnInit {
     return null;
   }
 
-  onSubmit(): void {
-    if (this.registerForm.valid) {
-      this.isLoading = true;
-      this.errorMessage = '';
-      this.successMessage = '';
-
-      const formValue = this.registerForm.value;
+  validate(): void {
+    if (this.myForm.valid) {
+      const formValue = this.myForm.value;
       const userData = {
         username: formValue.username,
         email: formValue.email,
@@ -75,37 +61,21 @@ export class RegisterComponent implements OnInit {
         department: formValue.department
       };
 
-      const result = this.authService.register(userData);
-      
-      if (result) {
-        this.successMessage = 'Registration successful! Redirecting to dashboard...';
-        setTimeout(() => {
-          this.router.navigate(['/dashboard']);
-        }, 2000);
-      } else {
-        this.errorMessage = 'Username or email already exists. Please try a different one.';
-      }
-      
-      this.isLoading = false;
-    } else {
-      this.markFormGroupTouched();
+      this.authService.register(userData).subscribe({
+        next: (result) => {
+          if (result) {
+            alert('Registration successful! Redirecting to dashboard...');
+            setTimeout(() => {
+              this.router.navigate(['/dashboard']);
+            }, 2000);
+          } else {
+            alert('Username or email already exists. Please try a different one.');
+          }
+        },
+        error: (error) => {
+          alert('An error occurred during registration. Please try again.');
+        }
+      });
     }
   }
-
-  private markFormGroupTouched(): void {
-    Object.keys(this.registerForm.controls).forEach(key => {
-      const control = this.registerForm.get(key);
-      control?.markAsTouched();
-    });
-  }
-
-  // Helper methods for template
-  get firstName() { return this.registerForm.get('firstName'); }
-  get lastName() { return this.registerForm.get('lastName'); }
-  get username() { return this.registerForm.get('username'); }
-  get email() { return this.registerForm.get('email'); }
-  get password() { return this.registerForm.get('password'); }
-  get confirmPassword() { return this.registerForm.get('confirmPassword'); }
-  get department() { return this.registerForm.get('department'); }
-  get role() { return this.registerForm.get('role'); }
 }

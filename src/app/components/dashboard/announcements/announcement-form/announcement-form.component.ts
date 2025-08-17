@@ -1,144 +1,135 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule, ActivatedRoute, Router } from '@angular/router';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../../services/auth.service';
 import { AnnouncementService } from '../../../../services/announcement.service';
 import { Announcement } from '../../../../models/announcement.model';
+import { UserRole } from '../../../../models/user.model';
 
 @Component({
   selector: 'app-announcement-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './announcement-form.component.html',
   styleUrls: ['./announcement-form.component.css']
 })
 export class AnnouncementFormComponent {
-  announcementForm: FormGroup;
+  myForm!: FormGroup;
+  currentUser: any;
   isEditMode = false;
   announcementId: number | null = null;
-  currentUser: any;
+
+  priorities = [
+    { value: 'low', label: 'Low' },
+    { value: 'medium', label: 'Medium' },
+    { value: 'high', label: 'High' }
+  ];
+
+  targetAudiences = [
+    { value: 'all', label: 'All Employees' },
+    { value: 'employees', label: 'Employees Only' },
+    { value: 'managers', label: 'Managers Only' }
+  ];
 
   constructor(
-    private fb: FormBuilder,
     private authService: AuthService,
     private announcementService: AnnouncementService,
-    private route: ActivatedRoute,
     private router: Router
   ) {
-    this.announcementForm = this.createForm();
     this.currentUser = this.authService.getCurrentUser();
-    this.checkEditMode();
+    this.initForm();
   }
 
-  createForm(): FormGroup {
-    return this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(3)]],
-      content: ['', [Validators.required, Validators.minLength(10)]],
-      isEvent: [false],
-      priority: ['medium', Validators.required],
-      targetAudience: ['all', Validators.required],
-      // Event-specific fields
-      eventDate: [null],
-      startTime: [''],
-      endTime: [''],
-      location: ['']
+  get myFc() {
+    return this.myForm.controls;
+  }
+
+  private initForm(): void {
+    this.myForm = new FormGroup({
+      title: new FormControl('', [Validators.required, Validators.minLength(5)]),
+      content: new FormControl('', [Validators.required, Validators.minLength(10)]),
+      isEvent: new FormControl(false),
+      eventDate: new FormControl(''),
+      startTime: new FormControl(''),
+      endTime: new FormControl(''),
+      location: new FormControl(''),
+      priority: new FormControl('medium', [Validators.required]),
+      targetAudience: new FormControl('all', [Validators.required])
     });
   }
 
-  checkEditMode(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.isEditMode = true;
-      this.announcementId = +id; // Convert string to number - easy way - or use Number(id)
-      this.loadAnnouncement();
-    }
-  }
+  validate(): void {
+    if (this.myForm.valid && this.validateEventFields()) {
+      const formValue = this.myForm.value;
+      
+      const announcementData = {
+        title: formValue.title,
+        content: formValue.content,
+        isEvent: formValue.isEvent,
+        eventDate: formValue.isEvent && formValue.eventDate ? new Date(formValue.eventDate) : undefined,
+        startTime: formValue.isEvent ? formValue.startTime : undefined,
+        endTime: formValue.isEvent ? formValue.endTime : undefined,
+        location: formValue.isEvent ? formValue.location : undefined,
+        createdBy: this.currentUser.id,
+        priority: formValue.priority,
+        targetAudience: formValue.targetAudience,
+        isActive: true
+      };
 
-  loadAnnouncement(): void {
-    if (this.announcementId) {
-      const announcement = this.announcementService.getAnnouncementById(this.announcementId);
-      if (announcement) {
-        this.announcementForm.patchValue({
-          title: announcement.title,
-          content: announcement.content,
-          isEvent: announcement.isEvent,
-          priority: announcement.priority,
-          targetAudience: announcement.targetAudience,
-          eventDate: announcement.eventDate ? this.formatDateForInput(announcement.eventDate) : null,
-          startTime: announcement.startTime || '',
-          endTime: announcement.endTime || '',
-          location: announcement.location || ''
+      if (this.isEditMode && this.announcementId) {
+        this.announcementService.updateAnnouncement(this.announcementId, announcementData).subscribe({
+          next: (result) => {
+            alert('Announcement updated successfully!');
+            this.router.navigate(['/dashboard/announcements']);
+          },
+          error: (error) => {
+            alert('An error occurred while updating announcement');
+          }
+        });
+      } else {
+        this.announcementService.createAnnouncement(announcementData as Announcement).subscribe({
+          next: (result) => {
+            alert('Announcement created successfully!');
+            this.router.navigate(['/dashboard/announcements']);
+          },
+          error: (error) => {
+            alert('An error occurred while creating announcement');
+          }
         });
       }
     }
   }
 
-  formatDateForInput(date: Date): string {
-    return new Date(date).toISOString().split('T')[0];
-  }
-
-  onIsEventChange(): void {
-    const isEvent = this.announcementForm.get('isEvent')?.value;
-    const eventDateControl = this.announcementForm.get('eventDate');
-    const startTimeControl = this.announcementForm.get('startTime');
-    const endTimeControl = this.announcementForm.get('endTime');
-    const locationControl = this.announcementForm.get('location');
-
+  private validateEventFields(): boolean {
+    const isEvent = this.myForm.get('isEvent')?.value;
+    
     if (isEvent) {
-      eventDateControl?.setValidators([Validators.required]);
-      startTimeControl?.setValidators([Validators.required]);
-      endTimeControl?.setValidators([Validators.required]);
-      locationControl?.setValidators([Validators.required]);
-    } else {
-      eventDateControl?.clearValidators();
-      startTimeControl?.clearValidators();
-      endTimeControl?.clearValidators();
-      locationControl?.clearValidators();
-    }
-
-    eventDateControl?.updateValueAndValidity();
-    startTimeControl?.updateValueAndValidity();
-    endTimeControl?.updateValueAndValidity();
-    locationControl?.updateValueAndValidity();
-  }
-
-  onSubmit(): void {
-    if (this.announcementForm.valid) {
-      const formValue = this.announcementForm.value;
+      const eventDate = this.myForm.get('eventDate')?.value;
+      const startTime = this.myForm.get('startTime')?.value;
+      const endTime = this.myForm.get('endTime')?.value;
+      const location = this.myForm.get('location')?.value;
       
-      const announcementData: Partial<Announcement> = {
-        title: formValue.title,
-        content: formValue.content,
-        isEvent: formValue.isEvent,
-        priority: formValue.priority,
-        targetAudience: formValue.targetAudience,
-        createdBy: this.currentUser?.id || 1,
-        isActive: true
-      };
-
-      if (formValue.isEvent) {
-        announcementData.eventDate = new Date(formValue.eventDate);
-        announcementData.startTime = formValue.startTime;
-        announcementData.endTime = formValue.endTime;
-        announcementData.location = formValue.location;
+      if (!eventDate) {
+        alert('Event date is required for events');
+        return false;
       }
-
-      if (this.isEditMode && this.announcementId) {
-        this.announcementService.updateAnnouncement(this.announcementId, announcementData);
-      } else {
-        this.announcementService.createAnnouncement(announcementData as Announcement);
+      
+      if (!startTime || !endTime) {
+        alert('Start time and end time are required for events');
+        return false;
       }
-
-      this.router.navigate(['/dashboard/announcements']);
+      
+      if (!location) {
+        alert('Location is required for events');
+        return false;
+      }
     }
-  }
-
-  onCancel(): void {
-    this.router.navigate(['/dashboard/announcements']);
+    
+    return true;
   }
 
   get isManager(): boolean {
-    return this.authService.isManager();
+    return this.currentUser?.role === UserRole.MANAGER;
   }
 }

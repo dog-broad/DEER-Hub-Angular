@@ -1,16 +1,17 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, ActivatedRoute, Router } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../../services/auth.service';
 import { DocumentService } from '../../../../services/document.service';
 import { Document } from '../../../../models/document.model';
+import { UserRole } from '../../../../models/user.model';
 
 @Component({
   selector: 'app-document-details',
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './document-details.component.html',
-  styleUrl: './document-details.component.css'
+  styleUrls: ['./document-details.component.css']
 })
 export class DocumentDetailsComponent {
   document: Document | undefined;
@@ -29,10 +30,14 @@ export class DocumentDetailsComponent {
   loadDocumentDetails(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.document = this.documentService.getDocumentById(+id);
-      if (!this.document || !this.canView()) {
-        this.router.navigate(['/dashboard/documents']);
-      }
+      this.documentService.getDocumentById(+id).subscribe({
+        next: (doc) => {
+          this.document = doc;
+          if (!this.document || !this.canView()) {
+            this.router.navigate(['/dashboard/documents']);
+          }
+        }
+      });
     }
   }
 
@@ -45,8 +50,13 @@ export class DocumentDetailsComponent {
 
   deleteDocument(): void {
     if (this.document && confirm('Are you sure you want to delete this document?')) {
-      this.documentService.deleteDocument(this.document.id);
-      this.router.navigate(['/dashboard/documents']);
+      this.documentService.deleteDocument(this.document.id).subscribe({
+        next: (success) => {
+          if (success) {
+            this.router.navigate(['/dashboard/documents']);
+          }
+        }
+      });
     }
   }
 
@@ -104,15 +114,22 @@ export class DocumentDetailsComponent {
   }
 
   getUploaderName(uploadedBy: number): string {
-    const user = this.authService.getUserById(uploadedBy);
-    return user ? `${user.firstName} ${user.lastName}` : 'Unknown';
+    this.authService.getUserById(uploadedBy).subscribe({
+      next: (user) => {
+        if (user) {
+          return `${user.firstName} ${user.lastName}`;
+        }
+        return 'Unknown';
+      }
+    });
+    return 'Loading...';
   }
 
   get isManager(): boolean {
-    return this.authService.isManager();
+    return this.currentUser?.role === UserRole.MANAGER;
   }
 
   get isEmployee(): boolean {
-    return this.authService.isEmployee();
+    return this.currentUser?.role === UserRole.EMPLOYEE;
   }
 }

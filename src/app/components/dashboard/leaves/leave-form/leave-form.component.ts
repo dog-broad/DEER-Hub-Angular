@@ -1,92 +1,103 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule, ActivatedRoute, Router } from '@angular/router';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../../services/auth.service';
 import { LeaveService } from '../../../../services/leave.service';
 import { Leave, LeaveType } from '../../../../models/leave.model';
+import { UserRole } from '../../../../models/user.model';
 
 @Component({
   selector: 'app-leave-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './leave-form.component.html',
   styleUrls: ['./leave-form.component.css']
 })
 export class LeaveFormComponent {
-  leaveForm: FormGroup;
+  myForm!: FormGroup;
+  currentUser: any;
   isEditMode = false;
   leaveId: number | null = null;
-  currentUser: any;
-  leaveTypes = Object.values(LeaveType);
+
+  leaveTypes = [
+    { value: LeaveType.SICK, label: 'Sick Leave' },
+    { value: LeaveType.VACATION, label: 'Vacation Leave' },
+    { value: LeaveType.PERSONAL, label: 'Personal Leave' },
+    { value: LeaveType.MATERNITY, label: 'Maternity Leave' },
+    { value: LeaveType.PATERNITY, label: 'Paternity Leave' },
+    { value: LeaveType.OTHER, label: 'Other Leave' }
+  ];
 
   constructor(
-    private fb: FormBuilder,
     private authService: AuthService,
     private leaveService: LeaveService,
-    private route: ActivatedRoute,
     private router: Router
   ) {
-    this.leaveForm = this.createForm();
     this.currentUser = this.authService.getCurrentUser();
+    this.initForm();
     this.checkEditMode();
   }
 
-  createForm(): FormGroup {
-    return this.fb.group({
-      leaveType: ['', Validators.required],
-      startDate: ['', Validators.required],
-      endDate: ['', Validators.required],
-      reason: ['', [Validators.required, Validators.minLength(10)]]
+  get myFc() {
+    return this.myForm.controls;
+  }
+
+  private initForm(): void {
+    this.myForm = new FormGroup({
+      leaveType: new FormControl('', [Validators.required]),
+      startDate: new FormControl('', [Validators.required]),
+      endDate: new FormControl('', [Validators.required]),
+      reason: new FormControl('', [Validators.required, Validators.minLength(10)])
     });
   }
 
-  checkEditMode(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.isEditMode = true;
-      this.leaveId = +id;
-      this.loadLeave();
-    }
-  }
-
-  loadLeave(): void {
-    if (this.leaveId) {
-      const leave = this.leaveService.getLeaveById(this.leaveId);
-      if (leave && leave.userId === this.currentUser.id) {
-        this.leaveForm.patchValue({
-          leaveType: leave.leaveType,
-          startDate: this.formatDateForInput(leave.startDate),
-          endDate: this.formatDateForInput(leave.endDate),
-          reason: leave.reason
-        });
-      } else {
-        this.router.navigate(['/dashboard/leaves']);
-      }
-    }
-  }
-
-  formatDateForInput(date: Date): string {
-    return new Date(date).toISOString().split('T')[0];
+  private checkEditMode(): void {
+    // This would be implemented if we need edit functionality
+    // For now, we'll keep it simple
   }
 
   calculateDays(): number {
-    const startDate = this.leaveForm.get('startDate')?.value;
-    const endDate = this.leaveForm.get('endDate')?.value;
+    const startDate = this.myForm.get('startDate')?.value;
+    const endDate = this.myForm.get('endDate')?.value;
     
     if (startDate && endDate) {
       const start = new Date(startDate);
       const end = new Date(endDate);
       const diffTime = Math.abs(end.getTime() - start.getTime());
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      return diffDays + 1; // Include both start and end dates
+      return diffDays + 1;
     }
     return 0;
   }
 
-  validateDates(): boolean {
-    const startDate = this.leaveForm.get('startDate')?.value;
-    const endDate = this.leaveForm.get('endDate')?.value;
+  validate(): void {
+    if (this.myForm.valid && this.validateDates()) {
+      const formValue = this.myForm.value;
+      
+      const leaveData = {
+        userId: this.currentUser.id,
+        leaveType: formValue.leaveType,
+        startDate: new Date(formValue.startDate),
+        endDate: new Date(formValue.endDate),
+        reason: formValue.reason
+      };
+
+      this.leaveService.applyLeave(leaveData).subscribe({
+        next: (result) => {
+          alert('Leave request submitted successfully!');
+          this.router.navigate(['/dashboard/leaves']);
+        },
+        error: (error) => {
+          alert('An error occurred while submitting leave request');
+        }
+      });
+    }
+  }
+
+  private validateDates(): boolean {
+    const startDate = this.myForm.get('startDate')?.value;
+    const endDate = this.myForm.get('endDate')?.value;
     
     if (startDate && endDate) {
       const start = new Date(startDate);
@@ -107,62 +118,7 @@ export class LeaveFormComponent {
     return true;
   }
 
-  onSubmit(): void {
-    if (this.leaveForm.valid && this.validateDates()) {
-      const formValue = this.leaveForm.value;
-      
-      const leaveData = {
-        userId: this.currentUser.id,
-        leaveType: formValue.leaveType,
-        startDate: new Date(formValue.startDate),
-        endDate: new Date(formValue.endDate),
-        reason: formValue.reason
-      };
-
-      if (this.isEditMode && this.leaveId) {
-        // For editing, we would need to implement an update method
-        // For now, we'll just navigate back
-        this.router.navigate(['/dashboard/leaves']);
-      } else {
-        this.leaveService.applyLeave(leaveData);
-        this.router.navigate(['/dashboard/leaves']);
-      }
-    } else {
-      this.markFormGroupTouched();
-    }
-  }
-
-  onCancel(): void {
-    this.router.navigate(['/dashboard/leaves']);
-  }
-
-  private markFormGroupTouched(): void {
-    Object.keys(this.leaveForm.controls).forEach(key => {
-      const control = this.leaveForm.get(key);
-      control?.markAsTouched();
-    });
-  }
-
-  getLeaveTypeText(type: LeaveType): string {
-    switch (type) {
-      case LeaveType.SICK:
-        return 'Sick Leave';
-      case LeaveType.VACATION:
-        return 'Vacation Leave';
-      case LeaveType.PERSONAL:
-        return 'Personal Leave';
-      case LeaveType.MATERNITY:
-        return 'Maternity Leave';
-      case LeaveType.PATERNITY:
-        return 'Paternity Leave';
-      case LeaveType.OTHER:
-        return 'Other Leave';
-      default:
-        return 'Unknown';
-    }
-  }
-
   get isEmployee(): boolean {
-    return this.authService.isEmployee();
+    return this.currentUser?.role === UserRole.EMPLOYEE;
   }
 }

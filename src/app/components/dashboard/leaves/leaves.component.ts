@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { LeaveService } from '../../../services/leave.service';
 import { Leave, LeaveStatus, LeaveType } from '../../../models/leave.model';
+import { UserRole } from '../../../models/user.model';
 
 @Component({
   selector: 'app-leaves',
@@ -30,12 +31,21 @@ export class LeavesComponent {
   }
 
   loadLeaves(): void {
-    if (this.authService.isManager()) {
-      this.leaves = this.leaveService.getAllLeaves();
+    if (this.currentUser?.role === UserRole.MANAGER) {
+      this.leaveService.getAllLeaves().subscribe({
+        next: (allLeaves) => {
+          this.leaves = allLeaves;
+          this.applyFilters();
+        }
+      });
     } else {
-      this.leaves = this.leaveService.getLeavesByUser(this.currentUser.id);
+      this.leaveService.getLeavesByUser(this.currentUser.id).subscribe({
+        next: (userLeaves) => {
+          this.leaves = userLeaves;
+          this.applyFilters();
+        }
+      });
     }
-    this.applyFilters();
   }
 
   applyFilters(): void {
@@ -63,30 +73,45 @@ export class LeavesComponent {
 
   cancelLeave(leaveId: number): void {
     if (confirm('Are you sure you want to cancel this leave request?')) {
-      this.leaveService.updateLeaveStatus(leaveId, LeaveStatus.CANCELLED, this.currentUser.id);
-      this.loadLeaves();
+      this.leaveService.updateLeaveStatus(leaveId, LeaveStatus.CANCELLED, this.currentUser.id).subscribe({
+        next: (result) => {
+          if (result) {
+            this.loadLeaves();
+          }
+        }
+      });
     }
   }
 
   approveLeave(leaveId: number): void {
     let comment = prompt('Please enter the approval comment:');
     if (comment) {
-      this.leaveService.updateLeaveStatus(leaveId, LeaveStatus.APPROVED, this.currentUser.id, comment);
-      this.loadLeaves();
+      this.leaveService.updateLeaveStatus(leaveId, LeaveStatus.APPROVED, this.currentUser.id, comment).subscribe({
+        next: (result) => {
+          if (result) {
+            this.loadLeaves();
+          }
+        }
+      });
     }
   }
 
   rejectLeave(leaveId: number): void {
-    this.leaveService.updateLeaveStatus(leaveId, LeaveStatus.REJECTED, this.currentUser.id);
-    this.loadLeaves();
+    this.leaveService.updateLeaveStatus(leaveId, LeaveStatus.REJECTED, this.currentUser.id).subscribe({
+      next: (result) => {
+        if (result) {
+          this.loadLeaves();
+        }
+      }
+    });
   }
 
   get isManager(): boolean {
-    return this.authService.isManager();
+    return this.currentUser?.role === UserRole.MANAGER;
   }
 
   get isEmployee(): boolean {
-    return this.authService.isEmployee();
+    return this.currentUser?.role === UserRole.EMPLOYEE;
   }
 
   formatDate(date: Date): string {
@@ -166,8 +191,16 @@ export class LeavesComponent {
   }
 
   getNameByUserId(userId: number): string {
-    const user = this.authService.getUserById(userId);
-    return user ? `${user.firstName} ${user.lastName}` : 'Unknown';
+    this.authService.getUserById(userId).subscribe({
+      next: (user) => {
+        console.log("user", user?.toString());
+        if (user) {
+          return `${user.firstName} ${user.lastName}`;
+        }
+        return 'Unknown';
+      }
+    });
+    return 'Loading...';
   }
 
   canCancel(leave: Leave): boolean {

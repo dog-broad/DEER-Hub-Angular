@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import { UserRole } from '../../../models/user.model';
 
 @Component({
   selector: 'app-sidebar',
@@ -14,13 +15,12 @@ export class SidebarComponent {
 
   constructor(public authService: AuthService, private router: Router) {}
 
-
   get isManager(): boolean {
-    return this.authService.isManager();
+    return this.authService.getCurrentUser()?.role === UserRole.MANAGER;
   }
 
   get isEmployee(): boolean {
-    return this.authService.isEmployee();
+    return this.authService.getCurrentUser()?.role === UserRole.EMPLOYEE;
   }
 
   get currentUser() {

@@ -1,17 +1,18 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, ActivatedRoute, Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../../services/auth.service';
 import { LeaveService } from '../../../../services/leave.service';
 import { Leave, LeaveStatus, LeaveType } from '../../../../models/leave.model';
+import { UserRole } from '../../../../models/user.model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-leave-details',
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './leave-details.component.html',
-  styleUrl: './leave-details.component.css'
+  styleUrls: ['./leave-details.component.css']
 })
 export class LeaveDetailsComponent {
   leave: Leave | undefined;
@@ -24,58 +25,110 @@ export class LeaveDetailsComponent {
     private route: ActivatedRoute,
     private router: Router
   ) {
-    this.currentUser = this.authService.getCurrentUser();
+    this.currentUser = this.authService.getCurrentUser()
     this.loadLeaveDetails();
   }
 
   loadLeaveDetails(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.leave = this.leaveService.getLeaveById(+id);
-      if (!this.leave) {
-        this.router.navigate(['/dashboard/leaves']);
-      }
+      this.leaveService.getLeaveById(+id).subscribe({
+        next: (leave) => {
+          this.leave = leave;
+          console.log("Current User after loadLeaveDetails", this.currentUser);
+          console.log("Leave", this.leave);
+          console.log("Can View", this.canView());
+          console.log("Can Edit", this.canEdit());
+          console.log("Can Delete", this.canDelete());
+          console.log("Can Approve Reject", this.canApproveReject());
+          if (!this.leave || !this.canView()) {
+            this.router.navigate(['/dashboard/leaves']);
+          }
+        }
+      });
     }
+  }
+
+  canView(): boolean {
+    console.log("Comparing", this.leave?.userId, this.currentUser.id);
+    return this.leave !== undefined && (
+      this.isManager || 
+      this.leave.userId === this.currentUser.id
+    );
+  }
+
+  canEdit(): boolean {
+    return this.leave !== undefined && (
+      this.isManager || 
+      (this.leave.userId === this.currentUser.id && this.leave.status === LeaveStatus.PENDING)
+    );
+  }
+
+  canDelete(): boolean {
+    return this.leave !== undefined && (
+      this.isManager || 
+      (this.leave.userId === this.currentUser.id && this.leave.status === LeaveStatus.PENDING)
+    );
+  }
+
+  canApproveReject(): boolean {
+    return this.leave !== undefined && 
+           this.isManager && 
+           this.leave.status === LeaveStatus.PENDING;
   }
 
   approveLeave(): void {
     if (this.leave && this.approvalComment.trim()) {
-      this.leaveService.updateLeaveStatus(
-        this.leave.id, 
-        LeaveStatus.APPROVED, 
-        this.currentUser.id, 
-        this.approvalComment
-      );
-      this.router.navigate(['/dashboard/leaves']);
-    } else {
-      alert('Please provide a comment for approval.');
+      this.leaveService.updateLeaveStatus(this.leave.id, LeaveStatus.APPROVED, this.currentUser.id, this.approvalComment).subscribe({
+        next: (result) => {
+          if (result) {
+            this.approvalComment = '';
+            this.loadLeaveDetails();
+          }
+        }
+      });
+    } else if (!this.approvalComment.trim()) {
+      alert('Please enter a comment before approving the leave request.');
     }
   }
 
   rejectLeave(): void {
     if (this.leave && this.approvalComment.trim()) {
-      this.leaveService.updateLeaveStatus(
-        this.leave.id, 
-        LeaveStatus.REJECTED, 
-        this.currentUser.id, 
-        this.approvalComment
-      );
-      this.router.navigate(['/dashboard/leaves']);
-    } else {
-      alert('Please provide a comment for rejection.');
+      this.leaveService.updateLeaveStatus(this.leave.id, LeaveStatus.REJECTED, this.currentUser.id, this.approvalComment).subscribe({
+        next: (result) => {
+          if (result) {
+            this.approvalComment = '';
+            this.loadLeaveDetails();
+          }
+        }
+      });
+    } else if (!this.approvalComment.trim()) {
+      alert('Please enter a comment before rejecting the leave request.');
     }
   }
 
-  canApproveReject(): boolean {
-    return this.isManager && 
-           this.leave?.status === LeaveStatus.PENDING;
+  cancelLeave(): void {
+    if (this.leave && confirm('Are you sure you want to cancel this leave request?')) {
+      this.leaveService.updateLeaveStatus(this.leave.id, LeaveStatus.CANCELLED, this.currentUser.id).subscribe({
+        next: (result) => {
+          if (result) {
+            this.loadLeaveDetails();
+          }
+        }
+      });
+    }
   }
 
-  canView(): boolean {
-    return !!(this.leave && (
-      this.isManager || 
-      this.leave.userId === this.currentUser.id
-    ));
+  deleteLeave(): void {
+    if (this.leave && confirm('Are you sure you want to delete this leave request?')) {
+      this.leaveService.deleteLeave(this.leave.id).subscribe({
+        next: (success) => {
+          if (success) {
+            this.router.navigate(['/dashboard/leaves']);
+          }
+        }
+      });
+    }
   }
 
   formatDate(date: Date): string {
@@ -167,15 +220,22 @@ export class LeaveDetailsComponent {
   }
 
   getNameByUserId(userId: number): string {
-    const user = this.authService.getUserById(userId);
-    return user ? `${user.firstName} ${user.lastName}` : 'Unknown';
+    this.authService.getUserById(userId).subscribe({
+      next: (user) => {
+        if (user) {
+          return `${user.firstName} ${user.lastName}`;
+        }
+        return 'Unknown';
+      }
+    });
+    return 'Loading...';
   }
 
   get isManager(): boolean {
-    return this.authService.isManager();
+    return this.currentUser?.role === UserRole.MANAGER;
   }
 
   get isEmployee(): boolean {
-    return this.authService.isEmployee();
+    return this.currentUser?.role === UserRole.EMPLOYEE;
   }
 }
