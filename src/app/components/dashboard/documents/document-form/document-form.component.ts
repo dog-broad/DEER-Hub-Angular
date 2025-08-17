@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -14,7 +14,7 @@ import { UserRole } from '../../../../models/user.model';
   templateUrl: './document-form.component.html',
   styleUrls: ['./document-form.component.css']
 })
-export class DocumentFormComponent {
+export class DocumentFormComponent implements OnInit {
   myForm!: FormGroup;
   currentUser: any;
   isEditMode = false;
@@ -25,7 +25,9 @@ export class DocumentFormComponent {
     private authService: AuthService,
     private documentService: DocumentService,
     private router: Router
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
     this.initForm();
   }

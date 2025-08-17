@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
 import { LeaveService } from '../../../services/leave.service';
@@ -16,7 +16,7 @@ import { UserRole } from '../../../models/user.model';
   templateUrl: './dashboard-home.component.html',
   styleUrls: ['./dashboard-home.component.css']
 })
-export class DashboardHomeComponent {
+export class DashboardHomeComponent implements OnInit {
   currentUser: any;
   recentLeaves: Leave[] = [];
   recentDocuments: Document[] = [];
@@ -32,7 +32,9 @@ export class DashboardHomeComponent {
     private leaveService: LeaveService,
     private documentService: DocumentService,
     private announcementService: AnnouncementService
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
     this.loadDashboardData();
   }

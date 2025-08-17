@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -14,7 +14,7 @@ import { UserRole } from '../../../../models/user.model';
   templateUrl: './leave-form.component.html',
   styleUrls: ['./leave-form.component.css']
 })
-export class LeaveFormComponent {
+export class LeaveFormComponent implements OnInit {
   myForm!: FormGroup;
   currentUser: any;
   isEditMode = false;
@@ -22,7 +22,7 @@ export class LeaveFormComponent {
 
   leaveTypes = [
     { value: LeaveType.SICK, label: 'Sick Leave' },
-    { value: LeaveType.VACATION, label: 'Vacation Leave' },
+    {value: LeaveType.VACATION, label: 'Vacation Leave' },
     { value: LeaveType.PERSONAL, label: 'Personal Leave' },
     { value: LeaveType.MATERNITY, label: 'Maternity Leave' },
     { value: LeaveType.PATERNITY, label: 'Paternity Leave' },
@@ -33,7 +33,9 @@ export class LeaveFormComponent {
     private authService: AuthService,
     private leaveService: LeaveService,
     private router: Router
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
     this.initForm();
     this.checkEditMode();

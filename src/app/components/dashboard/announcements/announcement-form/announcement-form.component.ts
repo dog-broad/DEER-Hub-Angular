@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -14,7 +14,7 @@ import { UserRole } from '../../../../models/user.model';
   templateUrl: './announcement-form.component.html',
   styleUrls: ['./announcement-form.component.css']
 })
-export class AnnouncementFormComponent {
+export class AnnouncementFormComponent implements OnInit {
   myForm!: FormGroup;
   currentUser: any;
   isEditMode = false;
@@ -36,7 +36,9 @@ export class AnnouncementFormComponent {
     private authService: AuthService,
     private announcementService: AnnouncementService,
     private router: Router
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
     this.initForm();
   }

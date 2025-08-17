@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../../services/auth.service';
@@ -13,7 +13,7 @@ import { UserRole } from '../../../../models/user.model';
   templateUrl: './document-details.component.html',
   styleUrls: ['./document-details.component.css']
 })
-export class DocumentDetailsComponent {
+export class DocumentDetailsComponent implements OnInit {
   document: Document | undefined;
   currentUser: any;
 
@@ -22,7 +22,9 @@ export class DocumentDetailsComponent {
     private documentService: DocumentService,
     private route: ActivatedRoute,
     private router: Router
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
     this.loadDocumentDetails();
   }

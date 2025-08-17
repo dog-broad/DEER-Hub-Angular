@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -12,15 +12,21 @@ import { UserRole } from '../../../models/user.model';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent {
-  myForm: FormGroup;
+export class RegisterComponent implements OnInit {
+  myForm!: FormGroup;
   departments = ['IT', 'HR', 'Marketing', 'Finance', 'Operations', 'Sales'];
   roles = [
     { value: UserRole.EMPLOYEE, label: 'Employee' },
     { value: UserRole.MANAGER, label: 'Manager' }
   ];
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(private authService: AuthService, private router: Router) {}
+
+  ngOnInit(): void {
+    this.initForm();
+  }
+
+  private initForm(): void {
     this.myForm = new FormGroup({
       firstName: new FormControl('', [Validators.required, Validators.minLength(2)]),
       lastName: new FormControl('', [Validators.required, Validators.minLength(2)]),

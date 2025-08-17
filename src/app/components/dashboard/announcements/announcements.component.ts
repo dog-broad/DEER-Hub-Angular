@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
@@ -13,7 +13,7 @@ import { UserRole } from '../../../models/user.model';
   templateUrl: './announcements.component.html',
   styleUrls: ['./announcements.component.css']
 })
-export class AnnouncementsComponent {
+export class AnnouncementsComponent implements OnInit {
   announcements: Announcement[] = [];
   events: Announcement[] = [];
   currentUser: any;
@@ -21,7 +21,9 @@ export class AnnouncementsComponent {
   constructor(
     public authService: AuthService,
     private announcementService: AnnouncementService
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
     this.loadAnnouncements();
   }

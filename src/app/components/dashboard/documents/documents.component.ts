@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -14,7 +14,7 @@ import { UserRole } from '../../../models/user.model';
   templateUrl: './documents.component.html',
   styleUrl: './documents.component.css'
 })
-export class DocumentsComponent {
+export class DocumentsComponent implements OnInit {
   documents: Document[] = [];
   filteredDocuments: Document[] = [];
   currentUser: any;
@@ -23,7 +23,9 @@ export class DocumentsComponent {
   constructor(
     public authService: AuthService,
     private documentService: DocumentService
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
     this.loadDocuments();
   }

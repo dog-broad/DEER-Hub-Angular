@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -14,7 +14,7 @@ import { UserRole } from '../../../models/user.model';
   templateUrl: './leaves.component.html',
   styleUrls: ['./leaves.component.css']
 })
-export class LeavesComponent {
+export class LeavesComponent implements OnInit {
   leaves: Leave[] = [];
   filteredLeaves: Leave[] = [];
   currentUser: any;
@@ -25,7 +25,9 @@ export class LeavesComponent {
   constructor(
     public authService: AuthService,
     private leaveService: LeaveService
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
     this.loadLeaves();
   }

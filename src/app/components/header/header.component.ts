@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -11,10 +11,12 @@ import { User } from '../../models/user.model';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   isMenuCollapsed = true;
 
-  constructor(public authService: AuthService) {
+  constructor(public authService: AuthService) {}
+
+  ngOnInit(): void {
     console.log(this.authService.isLoggedIn());
   }
 

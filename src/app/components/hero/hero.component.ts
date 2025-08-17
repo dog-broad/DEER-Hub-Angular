@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -11,10 +11,12 @@ import { User } from '../../models/user.model';
   templateUrl: './hero.component.html',
   styleUrls: ['./hero.component.css']
 })
-export class HeroComponent {
+export class HeroComponent implements OnInit {
   currentUser: User | null = null;
 
-  constructor(public authService: AuthService) {
+  constructor(public authService: AuthService) {}
+
+  ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
     console.log(this.currentUser);
   }

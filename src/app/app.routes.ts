@@ -15,20 +15,22 @@ import { LeaveDetailsComponent } from './components/dashboard/leaves/leave-detai
 import { DocumentsComponent } from './components/dashboard/documents/documents.component';
 import { DocumentFormComponent } from './components/dashboard/documents/document-form/document-form.component';
 import { DocumentDetailsComponent } from './components/dashboard/documents/document-details/document-details.component';
+import { AuthGuard, RoleGuard, GuestGuard } from './guards';
+import { UserRole } from './models/user.model';
 
 export const routes: Routes = [
   {
     path: '', component: MainComponent, children: [
       { path: '', component: HomeComponent },
       { path: 'home', component: HomeComponent },
-      { path: 'login', component: LoginComponent },
-      { path: 'register', component: RegisterComponent },
+      { path: 'login', component: LoginComponent, canActivate: [GuestGuard] },
+      { path: 'register', component: RegisterComponent, canActivate: [GuestGuard] },
       { path: 'features', component: FeaturesComponent },
       { path: 'about', component: AboutComponent },
     ]
   },
   {
-    path: 'dashboard', component: DashboardComponent, children: [
+    path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard], children: [
       { path: '', component: DashboardHomeComponent },
       { path: 'home', component: DashboardHomeComponent },
       { path: 'leaves', component: LeavesComponent },
@@ -36,12 +38,12 @@ export const routes: Routes = [
       { path: 'leaves/edit/:id', component: LeaveFormComponent },
       { path: 'leaves/:id', component: LeaveDetailsComponent },
       { path: 'documents', component: DocumentsComponent },
-      { path: 'documents/new', component: DocumentFormComponent },
-      { path: 'documents/edit/:id', component: DocumentFormComponent },
+      { path: 'documents/new', component: DocumentFormComponent, canActivate: [RoleGuard], data: { roles: [UserRole.MANAGER] } },
+      { path: 'documents/edit/:id', component: DocumentFormComponent, canActivate: [RoleGuard], data: { roles: [UserRole.MANAGER] } },
       { path: 'documents/:id', component: DocumentDetailsComponent },
       { path: 'announcements', component: AnnouncementsComponent },
-      { path: 'announcements/new', component: AnnouncementFormComponent },
-      { path: 'announcements/edit/:id', component: AnnouncementFormComponent },
+      { path: 'announcements/new', component: AnnouncementFormComponent, canActivate: [RoleGuard], data: { roles: [UserRole.MANAGER] } },
+      { path: 'announcements/edit/:id', component: AnnouncementFormComponent, canActivate: [RoleGuard], data: { roles: [UserRole.MANAGER] } },
       { path: 'employees', component: DashboardHomeComponent },
       { path: 'profile', component: DashboardHomeComponent },
     ]

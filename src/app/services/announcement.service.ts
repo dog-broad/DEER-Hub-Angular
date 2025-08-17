@@ -17,26 +17,15 @@ export class AnnouncementService {
   }
 
   getActiveAnnouncements(): Observable<Announcement[]> {
-    return this.http.get<Announcement[]>(`${this.apiUrl}/announcements`).pipe(
-      map(announcements => announcements.filter(announcement => announcement.isActive))
-    );
+    return this.http.get<Announcement[]>(`${this.apiUrl}/announcements?isActive=true`);
   }
 
   getAnnouncementsByAudience(audience: 'all' | 'employees' | 'managers'): Observable<Announcement[]> {
-    return this.http.get<Announcement[]>(`${this.apiUrl}/announcements`).pipe(
-      map(announcements => announcements.filter(announcement => 
-        announcement.isActive && 
-        (announcement.targetAudience === 'all' || announcement.targetAudience === audience)
-      ))
-    );
+    return this.http.get<Announcement[]>(`${this.apiUrl}/announcements?targetAudience=${audience}`);
   }
 
   getEvents(): Observable<Announcement[]> {
-    return this.http.get<Announcement[]>(`${this.apiUrl}/announcements`).pipe(
-      map(announcements => announcements.filter(announcement => 
-        announcement.isActive && announcement.isEvent
-      ))
-    );
+    return this.http.get<Announcement[]>(`${this.apiUrl}/announcements?isEvent=true`);
   }
 
   getAnnouncementById(id: number): Observable<Announcement | undefined> {

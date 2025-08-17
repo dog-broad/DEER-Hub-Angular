@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../../services/auth.service';
@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './leave-details.component.html',
   styleUrls: ['./leave-details.component.css']
 })
-export class LeaveDetailsComponent {
+export class LeaveDetailsComponent implements OnInit {
   leave: Leave | undefined;
   currentUser: any;
   approvalComment: string = '';
@@ -24,8 +24,10 @@ export class LeaveDetailsComponent {
     private leaveService: LeaveService,
     private route: ActivatedRoute,
     private router: Router
-  ) {
-    this.currentUser = this.authService.getCurrentUser()
+  ) {}
+
+  ngOnInit(): void {
+    this.currentUser = this.authService.getCurrentUser();
     this.loadLeaveDetails();
   }
 
