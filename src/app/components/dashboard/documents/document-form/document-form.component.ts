@@ -43,6 +43,18 @@ export class DocumentFormComponent implements OnInit {
       isPublic: new FormControl(true),
       tags: new FormControl('', [Validators.required])
     });
+    if (this.router.url.includes('edit')) {
+      this.isEditMode = true;
+      this.documentId = Number(this.router.url.split('/').pop());
+      this.documentService.getDocumentById(this.documentId).subscribe((document) => {
+        this.myForm.patchValue({
+          title: document?.title,
+          description: document?.description,
+          isPublic: document?.isPublic,
+          tags: document?.tags.join(', ')
+        });
+      });
+    }
   }
 
   onFileSelected(event: any): void {
@@ -85,4 +97,22 @@ export class DocumentFormComponent implements OnInit {
   get isManager(): boolean {
     return this.currentUser?.role === UserRole.MANAGER;
   }
+
+  onCancel(): void {
+    this.router.navigate(['/dashboard/documents']);
+  }
+
+  removeFile(): void {
+    this.selectedFile = null;
+    this.myForm.get('fileName')?.setValue('');
+  }  
+
+  filePreview(): string {
+    if (this.selectedFile) {
+      return this.selectedFile.name;
+    }
+    return '';
+  }
+
+  
 }

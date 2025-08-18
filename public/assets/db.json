@@ -1,7 +1,7 @@
 {
   "users": [
     {
-      "id": 1,
+      "id": "1",
       "username": "rahul.kumar",
       "email": "rahul.kumar@company.com",
       "password": "password123",
@@ -13,7 +13,7 @@
       "createdAt": "2025-06-15T00:00:00.000Z"
     },
     {
-      "id": 2,
+      "id": "2",
       "username": "priya.sharma",
       "email": "priya.sharma@company.com",
       "password": "password123",
@@ -25,7 +25,7 @@
       "createdAt": "2025-06-10T00:00:00.000Z"
     },
     {
-      "id": 3,
+      "id": "3",
       "username": "amit.patel",
       "email": "amit.patel@company.com",
       "password": "password123",
@@ -39,7 +39,7 @@
   ],
   "announcements": [
     {
-      "id": 1,
+      "id": "1",
       "title": "Company Town Hall Meeting",
       "content": "Join us for our quarterly town hall meeting where we will discuss company updates, achievements, and future plans.",
       "eventDate": "2025-09-15T00:00:00.000Z",
@@ -54,18 +54,18 @@
       "targetAudience": "all"
     },
     {
-      "id": 2,
-      "title": "New Employee Onboarding",
+      "id": "2",
+      "title": "New Employee Onboarding 2",
       "content": "Welcome to our new team members! Please complete the onboarding process by the end of this week.",
       "isEvent": false,
-      "createdBy": 2,
+      "createdBy": "2",
       "createdDate": "2025-07-10T00:00:00.000Z",
       "isActive": true,
       "priority": "medium",
       "targetAudience": "all"
     },
     {
-      "id": 3,
+      "id": "3",
       "title": "IT Maintenance Schedule",
       "content": "Scheduled maintenance will be performed on Saturday, August 23rd from 2:00 AM to 6:00 AM. Some services may be temporarily unavailable.",
       "isEvent": false,
@@ -76,7 +76,7 @@
       "targetAudience": "all"
     },
     {
-      "id": 4,
+      "id": "4",
       "title": "Team Building Event",
       "content": "Join us for a fun team building event at the local park. Activities include games, food, and networking.",
       "eventDate": "2025-09-20T00:00:00.000Z",
@@ -91,7 +91,7 @@
       "targetAudience": "all"
     },
     {
-      "id": 5,
+      "id": "5",
       "title": "Manager Training Session",
       "content": "Mandatory training session for all managers on new performance management system.",
       "eventDate": "2025-08-25T00:00:00.000Z",
@@ -106,7 +106,7 @@
       "targetAudience": "managers"
     },
     {
-      "id": 6,
+      "id": "6",
       "title": "Holiday Schedule Update",
       "content": "The office will be closed on Independence Day, August 15th. Please plan your work accordingly.",
       "isEvent": false,
@@ -117,7 +117,7 @@
       "targetAudience": "all"
     },
     {
-      "id": 7,
+      "id": "7",
       "title": "Quarterly Financial Review",
       "content": "Join us for the quarterly financial review meeting to discuss our financial performance and future projections.",
       "eventDate": "2025-10-01T00:00:00.000Z",
@@ -132,7 +132,7 @@
       "targetAudience": "all"
     },
     {
-      "id": 8,
+      "id": "8",
       "title": "Office Potluck",
       "content": "Bring your favorite dish to share with the team at our office potluck on Friday!",
       "isEvent": false,
@@ -143,7 +143,7 @@
       "targetAudience": "all"
     },
     {
-      "id": 9,
+      "id": "9",
       "title": "Health and Wellness Fair",
       "content": "Participate in our Health and Wellness Fair to learn about health resources and activities available to employees.",
       "eventDate": "2025-09-30T00:00:00.000Z",
@@ -160,7 +160,7 @@
   ],
   "leaves": [
     {
-      "id": 1,
+      "id": "1",
       "userId": 1,
       "leaveType": "vacation",
       "startDate": "2025-08-15T00:00:00.000Z",
@@ -173,7 +173,7 @@
       "comments": "Approved - enjoy your vacation!"
     },
     {
-      "id": 2,
+      "id": "2",
       "userId": 1,
       "leaveType": "sick",
       "startDate": "2025-06-10T00:00:00.000Z",
@@ -186,7 +186,7 @@
       "comments": "Get well soon!"
     },
     {
-      "id": 3,
+      "id": "3",
       "userId": 3,
       "leaveType": "personal",
       "startDate": "2025-09-01T00:00:00.000Z",
@@ -196,7 +196,7 @@
       "appliedDate": "2025-07-15T00:00:00.000Z"
     },
     {
-      "id": 4,
+      "id": "4",
       "userId": 3,
       "leaveType": "vacation",
       "startDate": "2025-10-10T00:00:00.000Z",
@@ -206,7 +206,7 @@
       "appliedDate": "2025-07-20T00:00:00.000Z"
     },
     {
-      "id": 5,
+      "id": "5",
       "userId": 3,
       "leaveType": "personal",
       "startDate": "2025-11-01T00:00:00.000Z",
@@ -216,7 +216,7 @@
       "appliedDate": "2025-07-15T00:00:00.000Z"
     },
     {
-      "id": 6,
+      "id": "6",
       "userId": 1,
       "leaveType": "paternity",
       "startDate": "2025-08-20T00:00:00.000Z",
@@ -228,7 +228,7 @@
   ],
   "documents": [
     {
-      "id": 1,
+      "id": "1",
       "title": "Employee Handbook 2025",
       "description": "Complete employee handbook with company policies and procedures",
       "fileName": "employee-handbook-2025.pdf",
@@ -245,7 +245,7 @@
       ]
     },
     {
-      "id": 2,
+      "id": "2",
       "title": "IT Security Guidelines",
       "description": "Security best practices for IT department",
       "fileName": "it-security-guidelines.pdf",
@@ -262,7 +262,7 @@
       ]
     },
     {
-      "id": 3,
+      "id": "3",
       "title": "Marketing Strategy Q3 2025",
       "description": "Marketing strategy presentation for Q3 2025",
       "fileName": "marketing-strategy-q3-2025.pptx",
@@ -279,7 +279,7 @@
       ]
     },
     {
-      "id": 4,
+      "id": "4",
       "title": "HR Policies Update",
       "description": "Updated HR policies effective from August 2025",
       "fileName": "hr-policies-update.pdf",
@@ -296,7 +296,7 @@
       ]
     },
     {
-      "id": 5,
+      "id": "5",
       "title": "Project Timeline Template",
       "description": "Excel template for project timeline management",
       "fileName": "project-timeline-template.xlsx",
@@ -313,7 +313,7 @@
       ]
     },
     {
-      "id": 6,
+      "id": "6",
       "title": "Temp",
       "description": "Template doc",
       "fileName": "angukar_notes.txt",
