@@ -19,6 +19,7 @@ export class LeaveFormComponent implements OnInit {
   currentUser: any;
   isEditMode = false;
   leaveId: number | null = null;
+  today = new Date();
 
   leaveTypes = [
     { value: LeaveType.SICK, label: 'Sick Leave' },
@@ -78,7 +79,7 @@ export class LeaveFormComponent implements OnInit {
       const formValue = this.myForm.value;
       
       const leaveData = {
-        userId: this.currentUser.id,
+        userId: Number(this.currentUser.id),
         leaveType: formValue.leaveType,
         startDate: new Date(formValue.startDate),
         endDate: new Date(formValue.endDate),

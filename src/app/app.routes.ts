@@ -47,5 +47,8 @@ export const routes: Routes = [
       { path: 'employees', component: DashboardHomeComponent },
       { path: 'profile', component: DashboardHomeComponent },
     ]
+  },
+  {
+    path: '**', redirectTo: ''
   }
 ];

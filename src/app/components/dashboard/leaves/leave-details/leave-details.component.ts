@@ -81,7 +81,7 @@ export class LeaveDetailsComponent implements OnInit {
 
   approveLeave(): void {
     if (this.leave && this.approvalComment.trim()) {
-      this.leaveService.updateLeaveStatus(this.leave.id, LeaveStatus.APPROVED, this.currentUser.id, this.approvalComment).subscribe({
+      this.leaveService.updateLeaveStatus(this.leave.id, LeaveStatus.APPROVED, Number(this.currentUser.id), this.approvalComment).subscribe({
         next: (result) => {
           if (result) {
             this.approvalComment = '';

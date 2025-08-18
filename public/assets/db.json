@@ -214,6 +214,16 @@
       "reason": "Personal matters",
       "status": "rejected",
       "appliedDate": "2025-07-15T00:00:00.000Z"
+    },
+    {
+      "id": 6,
+      "userId": 1,
+      "leaveType": "paternity",
+      "startDate": "2025-08-20T00:00:00.000Z",
+      "endDate": "2025-08-29T00:00:00.000Z",
+      "reason": "Baby on the way",
+      "status": "pending",
+      "appliedDate": "2025-08-17T17:55:57.185Z"
     }
   ],
   "documents": [
@@ -228,7 +238,11 @@
       "uploadedDate": "2025-06-15T00:00:00.000Z",
       "isPublic": true,
       "downloadUrl": "/assets/documents/employee-handbook-2025.pdf",
-      "tags": ["handbook", "policies", "procedures"]
+      "tags": [
+        "handbook",
+        "policies",
+        "procedures"
+      ]
     },
     {
       "id": 2,
@@ -241,7 +255,11 @@
       "uploadedDate": "2025-07-01T00:00:00.000Z",
       "isPublic": true,
       "downloadUrl": "/assets/documents/it-security-guidelines.pdf",
-      "tags": ["security", "IT", "guidelines"]
+      "tags": [
+        "security",
+        "IT",
+        "guidelines"
+      ]
     },
     {
       "id": 3,
@@ -254,7 +272,11 @@
       "uploadedDate": "2025-06-20T00:00:00.000Z",
       "isPublic": false,
       "downloadUrl": "/assets/documents/marketing-strategy-q3-2025.pptx",
-      "tags": ["marketing", "strategy", "presentation"]
+      "tags": [
+        "marketing",
+        "strategy",
+        "presentation"
+      ]
     },
     {
       "id": 4,
@@ -267,7 +289,11 @@
       "uploadedDate": "2025-07-15T00:00:00.000Z",
       "isPublic": true,
       "downloadUrl": "/assets/documents/hr-policies-update.pdf",
-      "tags": ["HR", "policies", "update"]
+      "tags": [
+        "HR",
+        "policies",
+        "update"
+      ]
     },
     {
       "id": 5,
@@ -280,7 +306,27 @@
       "uploadedDate": "2025-07-10T00:00:00.000Z",
       "isPublic": true,
       "downloadUrl": "/assets/documents/project-timeline-template.xlsx",
-      "tags": ["template", "project", "timeline"]
+      "tags": [
+        "template",
+        "project",
+        "timeline"
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Temp",
+      "description": "Template doc",
+      "fileName": "angukar_notes.txt",
+      "fileSize": 66707,
+      "fileType": "text/plain",
+      "uploadedBy": 2,
+      "isPublic": true,
+      "downloadUrl": "/assets/documents/angukar_notes.txt",
+      "tags": [
+        "angular",
+        "notes"
+      ],
+      "uploadedDate": "2025-08-18T03:43:25.327Z"
     }
   ]
 }

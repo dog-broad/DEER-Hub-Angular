@@ -65,7 +65,7 @@ export class AuthService {
 
 
   getUserById(userId: number): Observable<User | undefined> {
-    return this.http.get<User>(`${this.apiUrl}/users/${userId}`);
+    return this.http.get<User>(`${this.apiUrl}/users?id=${userId}`);
   }
 
   isLoggedIn(): Observable<boolean> {

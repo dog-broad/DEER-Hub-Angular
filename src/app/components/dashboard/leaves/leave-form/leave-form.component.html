@@ -35,7 +35,7 @@
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label for="startDate">Start Date</label>
-                                    <input type="date" id="startDate" formControlName="startDate" class="form-control">
+                                    <input type="date" id="startDate" formControlName="startDate" class="form-control" min="{{ today | date:'yyyy-MM-dd' }}">
                                     <div *ngIf="myFc?.['startDate']?.touched && myFc?.['startDate']?.invalid">
                                         <div *ngIf="myForm.get('startDate')?.errors?.['required']" class="alert alert-danger p-1 mt-1 small">
                                             Start date is required
