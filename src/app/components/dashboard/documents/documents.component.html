@@ -33,7 +33,7 @@
             </span>
           </div>
           <div class="mb-2">
-            <small class="text-muted">By: {{ getUploaderName(document.uploadedBy) }} | {{ formatDate(document.uploadedDate) }}</small>
+            <small class="text-muted">Uploaded at {{ formatDate(document.uploadedDate) }}</small>
           </div>
           <div>
             <button class="btn btn-sm btn-primary me-2" (click)="downloadDocument(document)">Download</button>

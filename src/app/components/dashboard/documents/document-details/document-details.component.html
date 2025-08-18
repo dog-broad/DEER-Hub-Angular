@@ -24,7 +24,6 @@
             <strong>Size:</strong> {{ formatFileSize(document.fileSize) }}<br>
             <strong>Type:</strong> {{ getFileTypeName(document.fileType) }}<br>
             <strong>Uploaded:</strong> {{ formatDate(document.uploadedDate) }}<br>
-            <strong>By:</strong> {{ getUploaderName(document.uploadedBy) }}
           </div>
           
           <div class="mb-3" *ngIf="document.tags.length > 0">

@@ -6,6 +6,7 @@ import { AuthService } from '../../../services/auth.service';
 import { DocumentService } from '../../../services/document.service';
 import { Document } from '../../../models/document.model';
 import { UserRole } from '../../../models/user.model';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-documents',
@@ -23,7 +24,7 @@ export class DocumentsComponent implements OnInit {
   constructor(
     public authService: AuthService,
     private documentService: DocumentService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
@@ -55,10 +56,10 @@ export class DocumentsComponent implements OnInit {
 
   applyFilters(): void {
     this.filteredDocuments = this.documents.filter(document => {
-      const searchMatch = !this.searchTerm || 
+      const searchMatch = !this.searchTerm ||
         document.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         document.description.toLowerCase().includes(this.searchTerm.toLowerCase());
-      
+
       return searchMatch;
     });
   }
@@ -112,15 +113,4 @@ export class DocumentsComponent implements OnInit {
     return this.isManager || document.isPublic || document.uploadedBy === this.currentUser.id;
   }
 
-  getUploaderName(uploadedBy: number): string {
-    this.authService.getUserById(uploadedBy).subscribe({
-      next: (user) => {
-        if (user) {
-          return `${user.firstName} ${user.lastName}`;
-        }
-        return 'Unknown';
-      }
-    });
-    return 'Loading...';
-  }
 }

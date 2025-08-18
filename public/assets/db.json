@@ -55,10 +55,10 @@
     },
     {
       "id": "2",
-      "title": "New Employee Onboarding 2",
+      "title": "New Employee Onboarding",
       "content": "Welcome to our new team members! Please complete the onboarding process by the end of this week.",
       "isEvent": false,
-      "createdBy": "2",
+      "createdBy": 2,
       "createdDate": "2025-07-10T00:00:00.000Z",
       "isActive": true,
       "priority": "medium",
@@ -313,20 +313,20 @@
       ]
     },
     {
-      "id": "6",
-      "title": "Temp",
-      "description": "Template doc",
-      "fileName": "angukar_notes.txt",
-      "fileSize": 66707,
-      "fileType": "text/plain",
-      "uploadedBy": 2,
+      "id": "7",
+      "title": "test",
+      "description": "Test file upload",
+      "fileName": "BBS - A BLOCKCHAIN BIG-DATA SHARING SYSTEM.pdf",
+      "fileSize": 3228850,
+      "fileType": "application/pdf",
+      "uploadedBy": "2",
       "isPublic": true,
-      "downloadUrl": "/assets/documents/angukar_notes.txt",
+      "downloadUrl": "/assets/documents/BBS - A BLOCKCHAIN BIG-DATA SHARING SYSTEM.pdf",
       "tags": [
-        "angular",
-        "notes"
+        "doc",
+        "bbs"
       ],
-      "uploadedDate": "2025-08-18T03:43:25.327Z"
+      "uploadedDate": "2025-08-18T06:10:59.613Z"
     }
   ]
 }

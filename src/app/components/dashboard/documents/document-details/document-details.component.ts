@@ -115,18 +115,6 @@ export class DocumentDetailsComponent implements OnInit {
     return 'Document';
   }
 
-  getUploaderName(uploadedBy: number): string {
-    this.authService.getUserById(uploadedBy).subscribe({
-      next: (user) => {
-        if (user) {
-          return `${user.firstName} ${user.lastName}`;
-        }
-        return 'Unknown';
-      }
-    });
-    return 'Loading...';
-  }
-
   get isManager(): boolean {
     return this.currentUser?.role === UserRole.MANAGER;
   }
