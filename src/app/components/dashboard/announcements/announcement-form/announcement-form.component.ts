@@ -59,6 +59,23 @@ export class AnnouncementFormComponent implements OnInit {
       priority: new FormControl('medium', [Validators.required]),
       targetAudience: new FormControl('all', [Validators.required])
     });
+    if (this.router.url.includes('edit')) {
+      this.isEditMode = true;
+      this.announcementId = Number(this.router.url.split('/').pop());
+      this.announcementService.getAnnouncementById(this.announcementId).subscribe((announcement) => {
+        this.myForm.patchValue({
+          title: announcement?.title,
+          content: announcement?.content,
+          isEvent: announcement?.isEvent,
+          eventDate: announcement?.eventDate,
+          startTime: announcement?.startTime,
+          endTime: announcement?.endTime,
+          location: announcement?.location,
+          priority: announcement?.priority,
+          targetAudience: announcement?.targetAudience
+        });
+      });
+    }
   }
 
   validate(): void {
@@ -133,5 +150,28 @@ export class AnnouncementFormComponent implements OnInit {
 
   get isManager(): boolean {
     return this.currentUser?.role === UserRole.MANAGER;
+  }
+
+  onCancel(): void {
+    this.router.navigate(['/dashboard/announcements']);
+  }
+
+  onIsEventChange(): void {
+    const isEvent = this.myForm.get('isEvent')?.value;
+    if (isEvent) {
+      this.myForm.get('eventDate')?.setValidators([Validators.required]);
+      this.myForm.get('startTime')?.setValidators([Validators.required]);
+      this.myForm.get('endTime')?.setValidators([Validators.required]);
+      this.myForm.get('location')?.setValidators([Validators.required]);
+    } else {
+      this.myForm.get('eventDate')?.clearValidators();
+      this.myForm.get('startTime')?.clearValidators();
+      this.myForm.get('endTime')?.clearValidators();
+      this.myForm.get('location')?.clearValidators();
+    }
+    this.myForm.get('eventDate')?.updateValueAndValidity();
+    this.myForm.get('startTime')?.updateValueAndValidity();
+    this.myForm.get('endTime')?.updateValueAndValidity();
+    this.myForm.get('location')?.updateValueAndValidity();
   }
 }
