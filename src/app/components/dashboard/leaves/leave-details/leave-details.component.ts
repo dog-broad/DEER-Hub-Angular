@@ -55,7 +55,7 @@ export class LeaveDetailsComponent implements OnInit {
     console.log("Comparing", this.leave?.userId, this.currentUser.id);
     return this.leave !== undefined && (
       this.isManager || 
-      this.leave.userId === this.currentUser.id
+      this.leave.userId == this.currentUser.id
     );
   }
 

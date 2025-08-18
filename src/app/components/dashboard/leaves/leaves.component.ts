@@ -146,7 +146,7 @@ export class LeavesComponent implements OnInit {
   canCancel(leave: Leave): boolean {
     return leave.status === LeaveStatus.PENDING &&
            (this.isEmployee || this.isManager) &&
-           leave.userId === this.currentUser.id;
+           leave.userId == this.currentUser.id;
   }
 
   canApproveReject(leave: Leave): boolean {
